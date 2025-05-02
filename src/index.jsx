@@ -26,7 +26,16 @@ const Index = () => {
 
       <div className="servicios-section">
         <h2 className="title-servicios">NUESTROS SERVICIOS</h2>
-        
+        <div className="imagenes-grid">
+          <div className="card-servicio">
+            <img alt="hardware" src="/src/assets/hardware.jpg" />
+            <h3>Reparación de hardware</h3>
+          </div>
+          <div className="card-servicio">
+            <img alt="software" src="/src/assets/software.jpg" />
+            <h3>Soporte de software</h3>
+          </div>
+        </div>
       </div>
 
       <div className="info-section extra-section">
