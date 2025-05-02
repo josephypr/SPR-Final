@@ -1,0 +1,42 @@
+.escoger-rol-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to top, #8d8aca 10%, #5a0086 90%);
+}
+
+.escoger-rol-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.logo-rol {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #5A0086;
+}
+
+.rol-buttons button {
+  margin: 10px;
+  padding: 12px 24px;
+  background-color: #5A0086;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.rol-buttons button:hover {
+  background-color: #7e33b5;
+}

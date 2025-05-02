@@ -1,0 +1,138 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #eaeaea;
+}
+
+/* HEADER */
+.header {
+  background-color: #5A0086;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  font-weight: bold;
+}
+
+.spr {
+  font-size: 32px;
+}
+
+.header-buttons button {
+  margin-left: 20px;
+  padding: 10px 20px;
+  background-color: white;
+  color: #5A0086;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.header-buttons button:hover {
+  background-color: #d1a5f0;
+}
+
+/* QUIENES SOMOS */
+.info-section {
+  background-color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 18px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: black;
+  text-align: justify;
+}
+
+.centrado {
+  text-align: center;
+}
+
+/* SERVICIOS */
+.servicios-section {
+  background-color: #5A0086;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.title-servicios {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.imagenes-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* OBJETIVO PRINCIPAL Y ALCANCE */
+.extra-section {
+  background-color: white;
+  padding: 40px 20px 50px 20px;
+}
+
+.alcance-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alcance-izquierda,
+.alcance-derecha {
+  flex: 1 1 400px;
+  font-size: 18px;
+  color: black;
+  text-align: justify;
+}
+
+.footer {
+  background-color: #5A0086;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.footer-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-text {
+  font-size: 18px;
+  margin: 0;
+}
+

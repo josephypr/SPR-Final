@@ -1,0 +1,75 @@
+.perfil-imagen {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Hace que sea redonda */
+  object-fit: cover;  /* Asegura que la imagen se recorte bien si es rectangular */
+  border: 3px solid #ccc; /* Borde gris claro */
+  margin: 0 auto 1rem auto; /* Centrada y con margen inferior */
+  display: block;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  transition: transform 0.3s ease; /* Efecto suave al pasar el mouse */
+}
+
+.perfil-imagen:hover {
+  transform: scale(1.05); /* Hace un ligero zoom al pasar el mouse */
+}
+
+.perfil-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.perfil-titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #4a2c97;
+}
+
+.perfil-form .perfil-group {
+  margin-bottom: 1rem;
+}
+
+.perfil-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.perfil-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.perfil-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+.btn-volver {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-volver:hover {
+  background-color: #5a6268;
+}
+
+
+.btn-editar { background: #4a2c97; color: #fff; }
+.btn-guardar { background: #28a745; color: #fff; }
+.btn-cancelar { background: #6c757d; color: #fff; }
+.btn-eliminar { background: #dc3545; color: #fff; }
