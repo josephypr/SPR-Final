@@ -8,7 +8,7 @@ class Config:
     USER_DB = 'root'
     PASS_DB = ''
     URL_DB = 'localhost'
-    NAME_DB = 'spr2'
+    NAME_DB = 'spr'
     FULL_URL_DB= F'mysql+pymysql://{USER_DB}:{PASS_DB}@{URL_DB}/{NAME_DB}'
     SQLALCHEMY_DATABASE_URI = FULL_URL_DB
     SQLALCHEMY_TRACK_MODIFICATIONS = False
