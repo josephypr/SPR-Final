@@ -49,7 +49,7 @@ body {
 .title {
   font-size: 28px;
   font-weight: bold;
-  color: #5A0086;
+  color: black;
   margin-bottom: 20px;
 }
 
@@ -81,11 +81,11 @@ body {
 
 .imagenes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
 }
-
 
 .imagenes-grid img {
   width: 100%;
@@ -129,7 +129,6 @@ body {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: white;
 }
 
 .footer-text {
@@ -137,43 +136,3 @@ body {
   margin: 0;
 }
 
-.card-servicio {
-  background-color: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.card-servicio img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-bottom: 2px solid #5A0086;
-}
-
-.card-servicio h3 {
-  margin: 15px 0;
-  color: #5A0086;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.card-servicio:hover {
-  transform: translateY(-5px);
-}
-
-.imagenes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  justify-content: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.card-servicio img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
