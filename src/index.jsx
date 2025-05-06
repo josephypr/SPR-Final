@@ -26,7 +26,6 @@ const Index = () => {
 
       <div className="servicios-section">
         <h2 className="title-servicios">NUESTROS SERVICIOS</h2>
-<<<<<<< HEAD
         <div className="imagenes-grid">
           <div className="card-servicio">
             <img alt="hardware" src="/src/assets/hardware.jpg" />
@@ -37,9 +36,6 @@ const Index = () => {
             <h3>Soporte de software</h3>
           </div>
         </div>
-=======
-        
->>>>>>> isabella
       </div>
 
       <div className="info-section extra-section">

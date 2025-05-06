@@ -17,11 +17,7 @@ const RegistroContratista = () => {
     fecha_nacimiento: "",
     id_rol: "1", // Contratista
     foto: null,
-<<<<<<< HEAD
-    titulos_uni: "",
-=======
     titulos_uni: "No requiere", //se agrega para que lo mande a la bd debido a que ese usuario no requiere ingresar este campo
->>>>>>> isabella
     descripcion: "",
   });
 
@@ -68,11 +64,7 @@ const RegistroContratista = () => {
           <input type="email" name="correo" value={formulario.correo} onChange={handleChange} placeholder="Correo" required />
           <input type="password" name="contrasena" value={formulario.contrasena} onChange={handleChange} placeholder="Contraseña" required />
           <input type="date" name="fecha_nacimiento" value={formulario.fecha_nacimiento} onChange={handleChange} placeholder="Fecha de nacimiento" required />
-<<<<<<< HEAD
-          <input type="text" name="titulos_uni" value={formulario.titulos_uni} onChange={handleChange} placeholder="Títulos universitarios" />
-=======
          
->>>>>>> isabella
           <input type="text" name="descripcion" value={formulario.descripcion} onChange={handleChange} placeholder="Descripción" />
           <input type="file" name="foto" accept="image/*" onChange={handleFileChange} className="foto-input" />
           <button type="submit" className="registro-button">Registrarse</button>
