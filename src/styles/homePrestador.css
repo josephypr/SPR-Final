@@ -1,0 +1,24 @@
+.prestador-servicios-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .perfil-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .perfil-section img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .servicios-section, .contacto-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
