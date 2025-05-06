@@ -1,11 +1,12 @@
 import datetime
 from flask_restful import Resource
 from flask import request 
-from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol
+from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol, CalificacionSchema, Calificacion
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
 from cloudinary.uploader import upload
 usuario_schema = UsuarioSchema()
 mensajes_schema = MensajesSchema
+calificaciones_schema = CalificacionSchema
 
 class VistaContratista(Resource):
     @jwt_required()
@@ -205,3 +206,15 @@ class Vista_Mensajeria(Resource):
         nuevo_mensaje = Mensajes(mensajes=request.json['mensajes'])
         db.session.add(nuevo_mensaje)
         return mensajes_schema.dump(nuevo_mensaje), 201
+    
+class Vista_Calificacion_Contratista(Resource):
+    #ruta publica
+    def get(self, cedula):
+        calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
+        return calificaciones_schema.dump(calificaciones), 200
+    
+class Vista_Calificacion_Prestador(Resource):
+    #ruta publica
+    def get(self, cedula):
+        calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
+        return calificaciones_schema.dump(calificaciones), 200
