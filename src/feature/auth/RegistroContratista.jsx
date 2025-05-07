@@ -64,7 +64,6 @@ const RegistroContratista = () => {
           <input type="email" name="correo" value={formulario.correo} onChange={handleChange} placeholder="Correo" required />
           <input type="password" name="contrasena" value={formulario.contrasena} onChange={handleChange} placeholder="Contraseña" required />
           <input type="date" name="fecha_nacimiento" value={formulario.fecha_nacimiento} onChange={handleChange} placeholder="Fecha de nacimiento" required />
-         
           <input type="text" name="descripcion" value={formulario.descripcion} onChange={handleChange} placeholder="Descripción" />
           <input type="file" name="foto" accept="image/*" onChange={handleFileChange} className="foto-input" />
           <button type="submit" className="registro-button">Registrarse</button>

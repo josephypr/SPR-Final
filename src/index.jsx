@@ -24,7 +24,7 @@ const Index = () => {
         </p>
       </div>
 
-      <div className="servicios-section">
+      <div className="servicios-seccion">
         <h2 className="title-servicios">NUESTROS SERVICIOS</h2>
         <div className="imagenes-grid">
           <div className="card-servicio">
