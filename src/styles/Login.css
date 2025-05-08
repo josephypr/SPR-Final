@@ -1,0 +1,76 @@
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.login-container {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to top, #8d8aca 10%, #5a0086 90%) no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.logo {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  font-size: 24px;
+  color: #5a0086;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #5a0086;
+  border-radius: 10px;
+  font-size: 16px;
+  color: gray;
+  background-color: white;
+}
+
+.login-input::placeholder {
+  color: gray;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-morado {
+  flex: 1;
+  padding: 12px;
+  background-color: #5a0086;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-morado:hover {
+  background-color: #7a2dbd;
+}
