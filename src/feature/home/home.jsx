@@ -56,16 +56,6 @@ const Home = () => {
         </aside>
 
         <section className="seccion-servicios">
-          <div className="barra-busqueda">
-            <input type="text" placeholder="Buscar servicios..." />
-            <select>
-              <option>Filtrar por</option>
-              <option>Nombre</option>
-              <option>Categoría</option>
-              <option>Precio</option>
-            </select>
-          </div>
-
           <div className="grid-servicios">
             {servicios.map((s, index) => (
               <div key={index} className="card-servicio">
