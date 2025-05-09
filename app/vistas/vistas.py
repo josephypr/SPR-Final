@@ -4,9 +4,14 @@ from flask import request
 from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol, CalificacionSchema, Calificacion
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
 from cloudinary.uploader import upload
+from werkzeug.utils import secure_filename
+import cloudinary.uploader
 usuario_schema = UsuarioSchema()
 mensajes_schema = MensajesSchema
 calificaciones_schema = CalificacionSchema
+from werkzeug.utils import secure_filename
+import cloudinary.uploader
+
 
 class VistaContratista(Resource):
     @jwt_required()
@@ -48,7 +53,6 @@ class VistaContratista(Resource):
         db.session.delete(contratista)
         db.session.commit()
         return {"mensaje": "Perfil contratista eliminado correctamente"}, 204
-
 
 
 class VistaPrestador(Resource):
@@ -158,14 +162,34 @@ class VistaSignIn(Resource):
 class VistaLogin(Resource):
     
     def post(self):
-        u_correo = request.json["correo"]    
-        u_contrasena = request.json["contrasena"]
-        usuario = Usuario.query.filter_by(correo = u_correo).first()
-        if usuario and usuario.verificar_contrasena(u_contrasena):
-            token_de_acceso = create_access_token(identity=str(usuario.cedula)) #se generaq el token
-            return { 'mensaje' : 'inicio de sesion exitoso', 'token_de_acceso': token_de_acceso}, 200
-        else:
-            return {'mensaje' : 'nombre de usuario o contraseña incorrectos, por favor intente de nuevo'}, 401
+        datos = request.get_json()
+        u_correo = datos.get("correo")
+        u_contrasena = datos.get("contrasena")
+        rol_id = datos.get("rol")  # <- recibir el rol desde el frontend
+
+        if not all([u_correo, u_contrasena, rol_id]):
+            return {'mensaje': 'Correo, contraseña o rol no enviados'}, 400
+
+        usuario = Usuario.query.filter_by(correo=u_correo).first()
+
+        if not usuario:
+            return {'mensaje': 'Correo no registrado'}, 401
+
+        if not usuario.verificar_contrasena(u_contrasena):
+            return {'mensaje': 'Contraseña incorrecta'}, 401
+
+        if usuario.rol_id != rol_id:
+            return {
+                'mensaje': f'Rol incorrecto. El usuario está registrado como rol ID {usuario.rol_id}.'
+            }, 403
+
+        token_de_acceso = create_access_token(identity=str(usuario.cedula))
+        return {
+            'mensaje': 'Inicio de sesión exitoso',
+            'token_de_acceso': token_de_acceso,
+            'rol': usuario.rol_id
+        }, 200
+
         
     @jwt_required()
     def put(self, cedula):
