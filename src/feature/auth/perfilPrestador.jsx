@@ -3,14 +3,29 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/perfil.css";
 
 const PerfilPrestador = () => {
+
   const navigate = useNavigate();
   const cedula = localStorage.getItem("cedula");
   const token = localStorage.getItem("token");
   const endpoint = `/api/prestador/${cedula}`;
-
+  const ratingEndpoint = `/api/prestador/${cedula}/calificaciones`;
   const [usuario, setUsuario] = useState(null);
   const [original, setOriginal] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [rating, setRating] = useState({
+    promedio: 0,
+    totalResenas: 0,
+    detalles: []
+  });
+
+  useEffect(()=> {
+    const fetchUsuario = async () => { /* ... */ };
+    const fetchRating = async () => { /* ... */};
+
+    fetchUsuario;
+    fetchRating;
+    
+  }, [endpoint, ratingEndpoint, token, navigate]);
 
   useEffect(() => {
     const fetchUsuario = async () => {
@@ -28,8 +43,28 @@ const PerfilPrestador = () => {
         navigate("/login");
       }
     };
+    
+    const fetchRating = async () => {
+      try {
+        const res = await fetch(ratingEndpoint, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setRating({
+            promedio: parseFloat(data.promedio) || 0,
+            totalResenas: parseInt(data.totalResenas) || 0,
+            detalles: data.detalles || []
+          });
+        }
+      } catch (err) {
+        console.error("Error al obtener calificaciones:", err);
+      }
+    };
+
     fetchUsuario();
-  }, [endpoint, token, navigate]);
+    fetchRating();
+  }, [endpoint, ratingEndpoint, token, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,21 +73,14 @@ const PerfilPrestador = () => {
 
   const handleGuardar = async () => {
     try {
-      // Asegurar formato correcto antes de enviar
-      const datos = {
-        ...usuario,
-        fecha_nacimiento: new Date(usuario.fecha_nacimiento).toISOString().split("T")[0],
-      };
-  
       const res = await fetch(endpoint, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(datos),
+        body: JSON.stringify(usuario)
       });
-  
       if (!res.ok) throw new Error("Error al guardar");
       alert("Datos actualizados");
       setOriginal(usuario);
@@ -62,7 +90,7 @@ const PerfilPrestador = () => {
       alert("No fue posible guardar los cambios");
     }
   };
-  
+
   const handleEliminar = async () => {
     if (!window.confirm("¿Eliminar tu cuenta?")) return;
     try {
@@ -85,23 +113,74 @@ const PerfilPrestador = () => {
     setEditing(false);
   };
 
+  const renderStars = (ratingValue) => {
+    const numericRating = typeof ratingValue === 'number' ? ratingValue : parseFloat(ratingValue) || 0;
+    return (
+      <div className="stars-container">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={`star ${numericRating >= star ? 'filled' : (numericRating >= star - 0.5 ? 'half' : '')}`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   if (!usuario) return <div className="perfil-container">Cargando perfil...</div>;
 
   return (
     <div className="perfil-container">
       <h2 className="perfil-titulo">Perfil Prestador</h2>
       <form className="perfil-form" onSubmit={e => e.preventDefault()}>
-          <img
-            src={usuario.foto || "/default-profile.png"}
-            alt="Foto de perfil"
-            className="perfil-imagen"
-          />
+        <img
+          src={usuario.foto || "/default-profile.png"}
+          alt="Foto de perfil"
+          className="perfil-imagen"
+        />
+        
+                {/* Sección de calificación */}
+        <div className="rating-section">
+          <h3>Calificación</h3>
+          {rating.totalResenas > 0 ? (
+            <>
+              <div className="rating-display">
+                {renderStars(rating.promedio)}
+                <span className="rating-value">
+                  {parseFloat(rating.promedio).toFixed(1)} ({rating.totalResenas} reseñas)
+                </span>
+              </div>
+              {rating.detalles.length > 0 && (
+                <div className="rating-details">
+                  <h4>Últimas reseñas</h4>
+                  <ul className="reviews-list">
+                    {rating.detalles.slice(0, 3).map((review, index) => (
+                      <li key={index} className="review-item">
+                        <div className="review-header">
+                          {renderStars(review.calificacion)}
+                        </div>
+                        {review.descripcion && (
+                          <p className="review-comment">{review.descripcion}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="no-reviews">Aún no hay calificaciones</p>
+          )}
+        </div>
+
 
         <div className="perfil-group">
           <label>Nombres</label>
           <input
             name="nombres"
-            value={usuario.nombres}
+            value={usuario.nombres || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"
@@ -111,7 +190,7 @@ const PerfilPrestador = () => {
           <label>Apellidos</label>
           <input
             name="apellidos"
-            value={usuario.apellidos}
+            value={usuario.apellidos || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"
@@ -121,7 +200,7 @@ const PerfilPrestador = () => {
           <label>Correo</label>
           <input
             name="correo"
-            value={usuario.correo}
+            value={usuario.correo || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"
@@ -131,7 +210,7 @@ const PerfilPrestador = () => {
           <label>Celular</label>
           <input
             name="celular"
-            value={usuario.celular}
+            value={usuario.celular || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"
@@ -141,7 +220,7 @@ const PerfilPrestador = () => {
           <label>Dirección</label>
           <input
             name="direccion"
-            value={usuario.direccion}
+            value={usuario.direccion || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"
@@ -152,7 +231,7 @@ const PerfilPrestador = () => {
           <input
             name="fecha_nacimiento"
             type="date"
-            value={usuario.fecha_nacimiento}
+            value={usuario.fecha_nacimiento || ''}
             onChange={handleChange}
             disabled={!editing}
             className="perfil-input"

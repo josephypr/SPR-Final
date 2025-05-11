@@ -56,8 +56,6 @@ const Home = () => {
         </aside>
 
         <section className="seccion-servicios">
-         
-
           <div className="grid-servicios">
             {servicios.map((s, index) => (
               <div key={index} className="card-servicio">
