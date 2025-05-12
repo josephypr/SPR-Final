@@ -7,10 +7,10 @@ import hardware from "../../assets/hardware.jpg"
 import software from "../../assets/software.jpg"
 
 const servicios = [
- // { img: servicio1, nombre: "Matenimiento de pc", precio: "20.000" }
- {img: hardware, nombre: "Mantenimiento de hardware de pc"},
- {img: software, nombre: "Mantenimiento de software de pc"}
-  
+  // { img: servicio1, nombre: "Matenimiento de pc", precio: "20.000" }
+  { img: hardware, nombre: "Mantenimiento de hardware de pc" },
+  { img: software, nombre: "Mantenimiento de software de pc" },
+
 ];
 
 const Home = () => {
@@ -42,7 +42,7 @@ const Home = () => {
           <h3>Categoría</h3>
           <ul>
             <li>Tecnología</li>
-            
+
           </ul>
         </aside>
 
@@ -51,7 +51,7 @@ const Home = () => {
             {servicios.map((s, index) => (
               <div key={index} className="card-servicio">
                 <img src={s.img} alt={s.nombre} />
-                <h4>{s.nombre}</h4>
+                <h4 style={{ textAlign: 'center' }}>{s.nombre}</h4> {/* Añadido estilo para centrar */}
                 <button onClick={() => navigate('/homePrestador')}>Prestadores</button>
               </div>
             ))}

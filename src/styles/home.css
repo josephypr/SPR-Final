@@ -33,6 +33,8 @@ body {
 .usuario {
   position: relative;
   cursor: pointer;
+  display: flex; /* Añadimos flexbox al contenedor del usuario */
+  align-items: center; /* Centramos verticalmente los elementos dentro del contenedor */
 }
 
 .perfil-icono {
