@@ -44,15 +44,6 @@ const Home = () => {
             <li>Tecnología</li>
             
           </ul>
-
-          
-          <h3>Ordenar por</h3>
-          <select>
-            <option>Relevancia</option>
-            <option>Popularidad</option>
-            <option>Precio: Bajo a Alto</option>
-            <option>Precio: Alto a Bajo</option>
-          </select>
         </aside>
 
         <section className="seccion-servicios">
@@ -61,7 +52,7 @@ const Home = () => {
               <div key={index} className="card-servicio">
                 <img src={s.img} alt={s.nombre} />
                 <h4>{s.nombre}</h4>
-                <button>Prestadores</button>
+                <button onClick={() => navigate('/homePrestador')}>Prestadores</button>
               </div>
             ))}
           </div>

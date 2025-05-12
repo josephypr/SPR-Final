@@ -1,24 +1,25 @@
-.prestador-servicios-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .perfil-section {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .perfil-section img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .contacto-section, .servicios-section  {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 8px;
-  }
+.postular-btn {
+  padding: 15px 25px;
+  background-color: #6a0dad;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px;
+}
+
+.mini-perfil {
+  margin-top: 15px;
+  padding: 15px;
+  border: 2px solid #6a0dad;
+  border-radius: 12px;
+  background-color: #f3e5ff;
+  max-width: 250px;
+}
+
+.mini-perfil img {
+  width: 50px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
