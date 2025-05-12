@@ -45,9 +45,8 @@ const HomePrestador = () => {
           <h3>Ordenar por</h3>
           <select>
             <option>Relevancia</option>
-            <option>Popularidad</option>
-            <option>Precio: Bajo a Alto</option>
-            <option>Precio: Alto a Bajo</option>
+            <option>Estudios Universitarios</option>
+            <option>Mejor Calificacion</option>
           </select>
         </aside>
 
@@ -60,7 +59,8 @@ const HomePrestador = () => {
               <h4>Mi perfil</h4>
               <img src={perfil} alt="Mi perfil" className="perfil-icono" />
               <p>Nombre del usuario</p>
-              <p>Especialidad</p>
+              <p>Descripcion</p>
+              <p>Calificacion</p>
               <button onClick={() => setShowPostulacion(false)}>Cerrar</button>
             </div>
           )}
