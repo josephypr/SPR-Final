@@ -23,6 +23,17 @@ const RegistroPrestador = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validar solo letras y espacios
+    if ((name === "nombres" || name === "apellidos") && !/^[a-zA-Z\s]*$/.test(value)) {
+      return;
+    }
+
+    // Validar solo números
+    if ((name === "cedula" || name === "celular") && !/^\d*$/.test(value)) {
+      return;
+    }
+
     setFormulario((prev) => ({ ...prev, [name]: value }));
   };
 

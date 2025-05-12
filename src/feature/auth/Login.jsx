@@ -25,33 +25,35 @@ const Login = () => {
       alert('Por favor selecciona un rol');
       return;
     }
-  
+
+    // Convertir nombre de rol a ID
+    const rolMap = {
+      'contratista': 1,
+      'prestador': 2
+    };
+    const rol_id = rolMap[rol.toLowerCase()];
+
     const url = 'http://localhost:5000/login';
-  
+
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena })
+        body: JSON.stringify({ correo, contrasena, rol: rol_id })  // <- ahora se envía rol_id
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         alert('Inicio de sesión exitoso');
         const token = data.token_de_acceso;
-  
-        // Guardar el token
+
         localStorage.setItem("token", token);
-  
-        // Obtener la cédula desde el token
         const payload = JSON.parse(atob(token.split('.')[1]));
         const cedula = payload.sub || payload.identity;
         localStorage.setItem("cedula", cedula);
-  
-        // Guardar el rol seleccionado del formulario
-        localStorage.setItem("rol", rol);
-  
+        localStorage.setItem("rol", rol); // Guardamos el nombre del rol
+
         navigate("/home");
       } else {
         alert(`Error al iniciar sesión: ${data.mensaje}`);
@@ -61,7 +63,6 @@ const Login = () => {
       alert('Error al conectar con el servidor.');
     }
   };
-  
 
   return (
     <div className="login-container">

@@ -67,9 +67,20 @@ const PerfilContratista = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+  
+    // Validar solo letras y espacios para nombres y apellidos
+    if ((name === "nombres" || name === "apellidos") && !/^[a-zA-Z\s]*$/.test(value)) {
+      return;
+    }
+  
+    // Validar solo números para celular y cédula
+    if ((name === "celular" || name === "cedula") && !/^\d*$/.test(value)) {
+      return;
+    }
+  
     setUsuario(prev => ({ ...prev, [name]: value }));
   };
-
+  
   const handleGuardar = async () => {
     try {
       const res = await fetch(endpoint, {
