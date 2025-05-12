@@ -17,12 +17,38 @@ const RegistroContratista = () => {
     fecha_nacimiento: "",
     id_rol: "1", // Contratista
     foto: null,
-    titulos_uni: "No requiere", //se agrega para que lo mande a la bd debido a que ese usuario no requiere ingresar este campo
+    titulos_uni: "No requiere",
     descripcion: "",
   });
 
+  // Solo permite números, borrar, y navegar
+  const permitirSoloNumeros = (e) => {
+    const key = e.key;
+    if (!/^\d$/.test(key) && key !== "Backspace" && key !== "ArrowLeft" && key !== "ArrowRight" && key !== "Tab") {
+      e.preventDefault();
+    }
+  };
+
+  const bloquearPegadoNoNumerico = (e) => {
+    const texto = e.clipboardData.getData("text");
+    if (!/^\d+$/.test(texto)) {
+      e.preventDefault();
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validar solo letras y espacios
+    if ((name === "nombres" || name === "apellidos") && !/^[a-zA-Z\s]*$/.test(value)) {
+      return;
+    }
+
+    // Validar solo números
+    if ((name === "cedula" || name === "celular") && !/^\d*$/.test(value)) {
+      return;
+    }
+
     setFormulario((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -32,7 +58,6 @@ const RegistroContratista = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     for (const campo in formulario) {
       formData.append(campo, formulario[campo]);
@@ -58,8 +83,29 @@ const RegistroContratista = () => {
         <form onSubmit={handleSubmit}>
           <input type="text" name="nombres" value={formulario.nombres} onChange={handleChange} placeholder="Nombres" required />
           <input type="text" name="apellidos" value={formulario.apellidos} onChange={handleChange} placeholder="Apellidos" required />
-          <input type="text" name="cedula" value={formulario.cedula} onChange={handleChange} placeholder="Cédula" required />
-          <input type="text" name="celular" value={formulario.celular} onChange={handleChange} placeholder="Celular" required />
+          
+          <input
+            type="text"
+            name="cedula"
+            value={formulario.cedula}
+            onChange={handleChange}
+            onKeyDown={permitirSoloNumeros}
+            onPaste={bloquearPegadoNoNumerico}
+            placeholder="Cédula"
+            required
+          />
+
+          <input
+            type="text"
+            name="celular"
+            value={formulario.celular}
+            onChange={handleChange}
+            onKeyDown={permitirSoloNumeros}
+            onPaste={bloquearPegadoNoNumerico}
+            placeholder="Celular"
+            required
+          />
+
           <input type="text" name="direccion" value={formulario.direccion} onChange={handleChange} placeholder="Dirección" required />
           <input type="email" name="correo" value={formulario.correo} onChange={handleChange} placeholder="Correo" required />
           <input type="password" name="contrasena" value={formulario.contrasena} onChange={handleChange} placeholder="Contraseña" required />
