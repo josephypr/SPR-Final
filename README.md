@@ -1,4 +1,3 @@
-
 ## Configuración
 
 CONSOLA BASH
@@ -17,22 +16,25 @@ CONSOLA BASH
 4.  **Verificar configuración de la base de datos:**
     Revisa la configuración en los archivos de configuración de la aplicación para que coincida con tu entorno local.
 
-5.  **Exportar la variable de entorno de Flask:**
+5.   **Instalar librerias:**
+    pip install -r requirements.txt
+
+
+6.  **Exportar la variable de entorno de Flask:**
     export FLASK_APP="run.py:create_app('default')"
     
 
-6.  **Migraciones de la base de datos:**
+7.  **Migraciones de la base de datos:**
     
     flask init
     flask migrate
     flask upgrade
     
 
-7.  **Verificar caché:**
+8.  **Verificar caché:**
     (Asegúrate de limpiar cualquier caché si es necesario para probar los cambios).
 
 ## Ejecución
 
 Para correr la aplicación:
 flask run
-	
