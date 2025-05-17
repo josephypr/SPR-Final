@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/homePrestador.css";
 import logo from "../../assets/logo.png";
 import perfil from "../../assets/perfil.png";
+import whatsappIcon from "../../assets/whatsapp.png"; 
 
 const HomePrestador = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -46,7 +47,6 @@ const HomePrestador = () => {
           <select>
             <option>Relevancia</option>
             <option>Estudios Universitarios</option>
-            <option>Mejor Calificacion</option>
           </select>
         </aside>
 
@@ -56,12 +56,16 @@ const HomePrestador = () => {
           </button>
           {showPostulacion && (
             <div className="mini-perfil">
-              <h4>Mi perfil</h4>
+              <h4>Nombre de usuario</h4> 
               <img src={perfil} alt="Mi perfil" className="perfil-icono" />
-              <p>Nombre del usuario</p>
+              
               <p>Descripcion</p>
-              <p>Calificacion</p>
-              <button onClick={() => setShowPostulacion(false)}>Cerrar</button>
+              <img
+                src={whatsappIcon}
+                alt="WhatsApp"
+                className="whatsapp-icono"
+              />
+              <button onClick={() => setShowPostulacion(false)}>Eliminar postulación</button>
             </div>
           )}
         </section>
