@@ -1,0 +1,42 @@
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'}
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+group 'co.com.AutoFacebook'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+repositories { mavenLocal()
+    jcenter() }
+buildscript {
+    repositories { mavenLocal()
+        jcenter() }
+    ext{
+        serenityVersion="2.1.1"
+        serenityGradleVersion="2.1.1"
+        serenityCucumberVersion="1.9.51"}
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.30")}
+    dependencies{
+
+        classpath("net.serenity-bdd:serenity-gradle-plugin:$rootProject.ext.serenityGradleVersion") }
+
+}
+dependencies {
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: "2.0.0-alpha1"
+    implementation group: 'org.hamcrest', name: 'hamcrest', version: "2.2"
+    implementation group: 'net.serenity-bdd', name: 'serenity-cucumber', version: "$rootProject.ext.serenityCucumberVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-core', version: "$rootProject.ext.serenityVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: "$rootProject.ext.serenityVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-webdriver', version: "$rootProject.ext.serenityVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay',version: "$rootProject.ext.serenityVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-rest', version: "$rootProject.ext.serenityVersion"
+    runtimeOnly fileTree(dir: 'libs', include: '*.jar')
+    implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '2.0.49'
+    implementation 'org.slf4j:slf4j-simple:1.7.7'
+    implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version:'4.1.2'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+}
