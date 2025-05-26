@@ -7,10 +7,10 @@ import hardware from "../../assets/hardware.jpg"
 import software from "../../assets/software.jpg"
 
 const servicios = [
-  // { img: servicio1, nombre: "Matenimiento de pc", precio: "20.000" }
-  { img: hardware, nombre: "Mantenimiento de hardware de pc" },
-  { img: software, nombre: "Mantenimiento de software de pc" },
-
+ // { img: servicio1, nombre: "Matenimiento de pc", precio: "20.000" }
+ {img: hardware, nombre: "Mantenimiento de hardware de pc"},
+ {img: software, nombre: "Mantenimiento de software de pc"}
+  
 ];
 
 const Home = () => {

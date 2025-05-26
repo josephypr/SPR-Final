@@ -87,7 +87,7 @@ const Login = () => {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena, rol: rol_id })  // <- ahora se envía rol_id
+        body: JSON.stringify({ correo, contrasena, rol: rol_id }) // <- ahora se envía rol_id
       });
 
       const data = await response.json();
