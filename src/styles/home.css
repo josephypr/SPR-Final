@@ -1,184 +1,358 @@
-* General */
+/* General */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f5f5;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
 }
 
 .home {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Usar min-height para que la página sea al menos tan alta como la ventana */
 }
 
 /* Header */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #5A0086;
-  padding: 5px 30px; /* Más espaciado */
-  color: white;
-  position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5A0086; /* Tu color púrpura oscuro */
+    padding: 5px 30px; /* Más espaciado */
+    color: white;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para el header */
 }
-
 
 .logo {
-  max-height: 100px;  /* Ajustar la altura máxima */
-  max-width: 100%;  /* Asegura que no se estire */
-  object-fit: contain;  /* Mantiene la proporción sin distorsionar */
+    max-height: 100px; /* Ajustar la altura máxima */
+    max-width: 100%; /* Asegura que no se estire */
+    object-fit: contain; /* Mantiene la proporción sin distorsionar */
+    cursor: pointer; /* Añadir cursor de puntero para el logo */
 }
 
-
 .usuario {
+<<<<<<< HEAD
   position: relative;
   cursor: pointer;
   display: flex; /* Añadimos flexbox al contenedor del usuario */
   align-items: center; /* Centramos verticalmente los elementos dentro del contenedor */
+=======
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+>>>>>>> Andrey
 }
 
-.perfil-icono {
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
+.nombre-usuario {
+    margin-right: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.perfil-icono { /* Para el icono pequeño en la cabecera */
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover; /* Para que la imagen no se distorsione */
+    border: 2px solid white; /* Borde blanco alrededor del icono */
 }
 
 /* Menú desplegable */
 .menu-desplegable {
-  position: absolute;
-  top: 55px;
-  right: 20px;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 10;
+    position: absolute;
+    top: 70px; /* Ajustado para estar debajo del icono (60px height + padding) */
+    right: 30px; /* Ajustado para estar a la derecha del padding del header */
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1000; /* Asegurar que esté por encima de todo */
+    min-width: 150px; /* Ancho mínimo para los botones */
 }
 
 .menu-desplegable button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  color: #5A0086;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    color: #5A0086; /* Tu color púrpura oscuro */
+    font-size: 1em;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .menu-desplegable button:hover {
-  background-color: #f0f0f0;
-  color: #5A0086;
+    background-color: #f0f0f0;
+    color: #5A0086;
 }
 
 /* Contenido principal */
 .contenido {
-  display: flex;
-  flex: 1;
+    display: flex;
+    flex: 1;
 }
 
 /* Sidebar */
 .sidebar {
-  width: 240px;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    width: 240px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    display: flex; /* Añadir flexbox */
+    flex-direction: column; /* Apilar elementos verticalmente */
+    gap: 20px; /* Espacio entre los elementos del sidebar */
+    border-right: 1px solid #eee; /* Línea divisoria */
 }
 
 .sidebar h3 {
-  margin-top: 0;
+    margin-top: 0;
+    color: #5A0086; /* Tu color púrpura oscuro */
+    font-size: 1.4em;
+    border-bottom: 2px solid #5A0086; /* Línea divisoria para los títulos */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 20px;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
 }
 
 .sidebar li {
-  margin: 8px 0;
-  cursor: pointer;
+    margin: 8px 0;
+    cursor: pointer;
+    color: #555;
+    font-size: 1.05em;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.sidebar li:hover {
+    color: #5A0086; /* Tu color púrpura oscuro */
+    font-weight: bold;
 }
 
 .sidebar select,
 .sidebar input[type="range"] {
-  width: 100%;
-  margin-bottom: 20px;
-  margin-left: -10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    -webkit-appearance: none; /* Remove default arrow on select */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
 }
 
-/* Sección de servicios */
+/* Sección de servicios (el área principal de contenido) */
 .seccion-servicios {
-  flex: 1;
-  padding: 20px;
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9; /* Un color de fondo ligeramente diferente */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los elementos a la izquierda por defecto */
 }
 
-/* Barra de búsqueda */
+/* Barra de búsqueda (si se usa en home prestador, si no, se puede mover al HomeContratista.css) */
 .barra-busqueda {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 600px; /* Limitar el ancho si es necesario */
 }
 
 .barra-busqueda input {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1em;
 }
 
 .barra-busqueda select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    background-color: #fff;
+    cursor: pointer;
 }
 
-/* Grid de servicios */
+/* Tus estilos para .postular-btn - Ajustados para el tema */
+.postular-btn {
+    padding: 15px 25px;
+    background-color: #5A0086; /* Tu púrpura oscuro principal */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 30px; /* Espacio inferior consistente */
+    margin-top: 10px; /* Pequeño margen superior si es necesario */
+    box-shadow: 0 4px 8px rgba(90, 0, 134, 0.2); /* Sombra acorde al color */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.postular-btn:hover {
+    background-color: #45006b; /* Un poco más oscuro en hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(90, 0, 134, 0.3);
+}
+
+/* Tus estilos para .mini-perfil - Ajustados para el tema y la imagen */
+.mini-perfil {
+    margin-top: 15px; /* Dejar tu margen superior */
+    padding: 25px; /* Aumentado el padding para más espacio interno */
+    border: 2px solid #5A0086; /* Tu púrpura oscuro */
+    border-radius: 12px;
+    background-color: #f3e5ff; /* Tu púrpura muy claro */
+    width: 100%; /* Ocupa el ancho disponible */
+    max-width: 350px; /* Ajustado para un tamaño visible como en la imagen */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Espacio entre los elementos internos */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mini-perfil img.perfil-icono-grande { /* Importante: Usa esta clase para la foto grande */
+    width: 120px; /* Tamaño de la foto de perfil en el mini-perfil, más grande */
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #5A0086; /* Tu púrpura oscuro */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mini-perfil h4 {
+    text-align: center;
+    margin-bottom: 5px;
+    color: #5A0086; /* Tu púrpura oscuro */
+    font-size: 1.6em; /* Título más grande */
+}
+
+.mini-perfil p {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 1em;
+    line-height: 1.5;
+    max-height: 120px; /* Limita la altura de la descripción */
+    overflow: auto; /* Añade scroll si es muy larga */
+}
+
+/* Estilos para el enlace de WhatsApp (como botón) */
+.whatsapp-link {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar el contenido dentro del enlace */
+    gap: 10px;
+    background-color: #25D366; /* Verde de WhatsApp */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    width: auto; /* Ancho automático según contenido */
+    min-width: 200px; /* Asegurar un ancho mínimo para el botón de WhatsApp */
+}
+
+.whatsapp-link:hover {
+    background-color: #1DA851;
+    transform: translateY(-2px);
+}
+
+.whatsapp-icono { /* Icono de WhatsApp */
+    width: 28px; /* Tamaño un poco más grande para el icono */
+    height: 28px;
+}
+
+.mini-perfil button { /* Botón "Eliminar postulación" */
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-top: 15px; /* Espacio superior */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mini-perfil button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* Grid de servicios (Manteniendo tus estilos existentes, para HomeContratista) */
 .grid-servicios {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%; /* Asegurar que ocupe el ancho disponible */
 }
 
 .card-servicio {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease;
-  text-align: center;
-  padding-bottom: 10px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+    text-align: center;
+    padding-bottom: 10px;
 }
 
 .card-servicio img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
 }
 
 .card-servicio h4 {
-  margin: 10px 0 5px;
+    margin: 10px 0 5px;
+    color: #333; /* Color de texto más neutral */
 }
 
 .card-servicio p {
-  margin: 0 0 10px;
-  color: #5a189a;
-  font-weight: bold;
+    margin: 0 0 10px;
+    color: #5a189a; /* Tu color púrpura para el texto */
+    font-weight: bold;
 }
 
 .card-servicio button {
-  background-color: #5a189a;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+    background-color: #5a189a; /* Tu color púrpura para el botón */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .card-servicio button:hover {
-  background-color: #7b2cbf;
+    background-color: #7b2cbf;
 }
 
+<<<<<<< HEAD
 .nombre-usuario {
   margin-right: 10px;
   color: white;
@@ -186,4 +360,170 @@ body {
   font-size: 18px;
   display: inline-block;
   vertical-align: middle;
+=======
+
+/* Media Queries for Responsiveness */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+        padding: 20px;
+    }
+    .header {
+        padding: 10px 25px;
+    }
+    .logo {
+        max-height: 80px;
+    }
+    .perfil-icono {
+        height: 50px;
+        width: 50px;
+    }
+    .nombre-usuario {
+        font-size: 16px;
+    }
+    .menu-desplegable {
+        top: 60px;
+        right: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 15px;
+    }
+    .logo {
+        max-height: 60px;
+    }
+    .perfil-icono {
+        height: 40px;
+        width: 40px;
+    }
+    .nombre-usuario {
+        display: none; /* Oculta el nombre en pantallas muy pequeñas */
+    }
+    .menu-desplegable {
+        top: 55px;
+        right: 15px;
+    }
+
+    .contenido {
+        flex-direction: column; /* Apila el sidebar y la sección principal verticalmente */
+    }
+
+    .sidebar {
+        width: 100%; /* Sidebar ocupa todo el ancho */
+        border-bottom: 1px solid #eee;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-right: none; /* Eliminar borde derecho */
+        padding: 15px;
+    }
+
+    .seccion-servicios {
+        align-items: center; /* Centra los elementos horizontalmente en pantallas pequeñas */
+        padding: 15px;
+    }
+
+    .postular-btn {
+        width: 100%; /* Botón de postular ocupa todo el ancho */
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .mini-perfil {
+        width: 95%; /* Ocupa más ancho en pantallas pequeñas */
+        max-width: none; /* Eliminar el max-width para que se adapte mejor */
+        padding: 20px;
+    }
+
+    .mini-perfil img.perfil-icono-grande {
+        width: 100px;
+        height: 100px;
+    }
+    .whatsapp-link {
+        width: 90%; /* Ajustar el ancho del botón de WhatsApp */
+        min-width: unset; /* Eliminar min-width */
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 8px 10px;
+    }
+    .logo {
+        max-height: 50px;
+    }
+    .perfil-icono {
+        height: 35px;
+        width: 35px;
+    }
+    .menu-desplegable {
+        top: 45px;
+        right: 10px;
+        min-width: 120px;
+    }
+    .menu-desplegable button {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .sidebar {
+        padding: 10px;
+    }
+    .sidebar h3 {
+        font-size: 1.2em;
+        padding-bottom: 5px;
+    }
+    .sidebar li {
+        font-size: 0.9em;
+    }
+    .sidebar select {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    .seccion-servicios {
+        padding: 10px;
+    }
+
+    .barra-busqueda {
+        flex-direction: column; /* Apila input y select */
+        gap: 8px;
+    }
+    .barra-busqueda input,
+    .barra-busqueda select {
+        width: 100%;
+    }
+
+    .mini-perfil {
+        padding: 15px;
+        gap: 10px;
+    }
+    .mini-perfil img.perfil-icono-grande {
+        width: 80px;
+        height: 80px;
+        border-width: 3px;
+    }
+    .mini-perfil h4 {
+        font-size: 1.4em;
+    }
+    .mini-perfil p {
+        font-size: 0.9em;
+    }
+    .whatsapp-link {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+    .whatsapp-icono {
+        width: 24px;
+        height: 24px;
+    }
+    .mini-perfil button {
+        padding: 8px 15px;
+        font-size: 0.85em;
+    }
+
+    .grid-servicios {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+    }
+>>>>>>> Andrey
 }
