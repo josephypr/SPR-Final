@@ -109,7 +109,7 @@ const RegistroContratista = () => {
       await axios.post("http://localhost:5000/signin", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("¡Usuario registrado exitosamente!");
+      
       navigate("/login");
     } catch (error) {
       console.error("Error al registrar usuario:", error.response?.data || error.message);

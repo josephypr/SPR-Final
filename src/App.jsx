@@ -7,6 +7,7 @@ import RegistroPrestador from './feature/auth/RegistroPrestador';
 import EscogerRol from './feature/auth/EscogerRol';
 import Index from './index';
 import Home from "./feature/home/home";
+import Homecontratista from './feature/home/homeContratista'; "./feature/home/homecontratista";
 import HomePrestador from "./feature/home/homePrestador";
 import PerfilContratista from './feature/auth/perfilcontratista';
 import PerfilPrestador from './feature/auth/perfilPrestador';
@@ -26,6 +27,10 @@ function App() {
         <Route path="/Prestador" element={<PerfilPrestador/>} />
 
         {/* Rutas protegidas */}
+           <Route path="/homecontratista" element={
+          <ProtectedRoute element={< Homecontratista/>} />
+        } />
+
         <Route path="/home" element={
           <ProtectedRoute element={<Home />} />
         } />

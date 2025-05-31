@@ -13,15 +13,14 @@ const servicios = [
   
 ];
 
-const Home = () => {
+const Homecontratista = () => {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
   const handlePerfilClick = () => setShowMenu(!showMenu);
   const handleCerrarSesion = () => (window.location.href = "/");
   const handleIrPerfil = () => navigate("/perfil");
-
-  return (
+ return (
     <div className="home">
       <header className="header">
         <img src={logo} alt="Logo" className="logo" />
@@ -52,7 +51,7 @@ const Home = () => {
               <div key={index} className="card-servicio">
                 <img src={s.img} alt={s.nombre} />
                 <h4 style={{ textAlign: 'center' }}>{s.nombre}</h4> {/* Añadido estilo para centrar */}
-                <button onClick={() => navigate('/homePrestador')}>Prestadores</button>
+                <button onClick={() => navigate('/homecontratista')}>Ver Prestadores</button>
               </div>
             ))}
           </div>
@@ -61,5 +60,4 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;
+export default Homecontratista;
