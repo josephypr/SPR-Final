@@ -42,8 +42,15 @@ const Home = () => {
           <h3>Categoría</h3>
           <ul>
             <li>Tecnología</li>
-
+            
           </ul>
+          
+          <button 
+              
+              className="portafolio-btn"
+              onClick={() => navigate('/portafolio')} 
+          >Portafolio</button>
+
         </aside>
 
         <section className="seccion-servicios">

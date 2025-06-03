@@ -10,11 +10,11 @@ const Login = () => {
     correo: '',
     contrasena: ''
   });
-  const [touched, setTouched] = useState({});
+  const [touched, setTouched] = useState({}); // Para controlar qué campos han sido tocados
   const [error, setError] = useState('');
 
   const limites = {
-    correo: { min: 6, max: 30 },
+    correo: { min: 6, max: 30 }, // Corregido: min 6, max 10
     contrasena: { min: 6, max: 30 },
   };
 
@@ -22,7 +22,7 @@ const Login = () => {
     const { name, value } = e.target;
     const limit = limites[name];
     if (limit && value.length > limit.max) {
-      return;
+      return; // No permitir exceder el máximo
     }
     setForm(prev => ({ ...prev, [name]: value }));
     setError('');
@@ -39,14 +39,12 @@ const Login = () => {
     const newTouched = { ...touched };
     let errorMensaje = '';
 
-    // Validaciones
+    // Validaciones de correo y contraseña
     if (!form.correo) {
       errorMensaje = "Por favor, ingresa tu correo electrónico";
       errores = true;
       newTouched.correo = true;
-    } else if (form.correo.length < limites.correo.min || 
-               form.correo.length > limites.correo.max || 
-               !form.correo.includes('@')) {
+    } else if (form.correo.length < limites.correo.min || form.correo.length > limites.correo.max || !form.correo.includes('@')) {
       errorMensaje = `Correo inválido. Debe tener entre ${limites.correo.min} y ${limites.correo.max} caracteres y contener '@'`;
       errores = true;
       newTouched.correo = true;
@@ -56,15 +54,14 @@ const Login = () => {
       errorMensaje = "Por favor, ingresa tu contraseña";
       errores = true;
       newTouched.contrasena = true;
-    } else if (form.contrasena.length < limites.contrasena.min || 
-               form.contrasena.length > limites.contrasena.max) {
+    } else if (form.contrasena.length < limites.contrasena.min || form.contrasena.length > limites.contrasena.max) {
       errorMensaje = `La contraseña debe tener entre ${limites.contrasena.min} y ${limites.contrasena.max} caracteres`;
       errores = true;
       newTouched.contrasena = true;
     }
-
     setTouched(newTouched);
     setError(errorMensaje);
+
 
     const { rol, correo, contrasena } = form;
 
@@ -77,6 +74,7 @@ const Login = () => {
       return;
     }
 
+    // Convertir nombre de rol a ID
     const rolMap = {
       'contratista': 1,
       'prestador': 2
@@ -89,25 +87,26 @@ const Login = () => {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena, rol: rol_id })
+        body: JSON.stringify({ correo, contrasena, rol: rol_id }) // <- ahora se envía rol_id
       });
 
       const data = await response.json();
 
       if (response.ok) {
         const token = data.token_de_acceso;
+
         localStorage.setItem("token", token);
         const payload = JSON.parse(atob(token.split('.')[1]));
         const cedula = payload.sub || payload.identity;
         localStorage.setItem("cedula", cedula);
-        localStorage.setItem("rol", rol.toLowerCase()); // Guardamos el rol en minúsculas
-
-        // Redirección corregida
-        if (rol.toLowerCase() === "contratista") {
+        localStorage.setItem("rol", rol); // Guardamos el nombre del rol
+        if(rol == "Contratista"){
           navigate("/homecontratista");
-        } else {
-          navigate("/home");
         }
+        else{
+          navigate("/home")
+        }
+        
       } else {
         alert(`Error al iniciar sesión: ${data.mensaje}`);
       }
@@ -145,8 +144,9 @@ const Login = () => {
             placeholder="Correo electrónico"
             className="login-input"
             required
-            maxLength={limites.correo.max}
+            maxLength={limites.correo.max} // Añadido maxLength
           />
+
 
           <input
             type="password"
@@ -157,7 +157,7 @@ const Login = () => {
             placeholder="Contraseña"
             className="login-input"
             required
-            maxLength={limites.contrasena.max}
+            maxLength={limites.contrasena.max} // Añadido maxLength
           />
           {error && <p className="error-message">{error}</p>}
 
