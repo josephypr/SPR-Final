@@ -6,11 +6,11 @@ Característica: Autenticacion en la pagina de SPR
   Quiero autenticarme en el portal de SPR
   Para poder acceder al contenido y funcionalidades disponibles en mi cuenta.
 
-  @registro
+  @Autenticacion
 
   Escenario: Verificar la autenticacion exitosa en la pagina de SPR
     Dado que el usuario se encuentra en la pagina de inicio de sesion de SPR
     Cuando ingrese las credenciales correctas (usuario y contrasena)
-      | correo | Contrasena |
-      | isabella@gmail.com    | 12345678   |
+      | rol | usuarios | clave |
+      |Contratista | example@gmail.com    | 12345s   |
     Entonces se debe verificar que el usuario haya sido autenticado correctamente y redirigido a su pagina de inicio de SPR

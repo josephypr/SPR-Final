@@ -5,7 +5,7 @@ import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.Tasks;
 import net.serenitybdd.screenplay.actions.Open;
 
-public class abrirSPR implements Task {
+public class  abrirSPR implements Task {
 
     RegistroSPR registroSPR;
 

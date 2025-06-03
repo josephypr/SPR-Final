@@ -1,0 +1,112 @@
+[
+  {
+    "line": 3,
+    "elements": [
+      {
+        "line": 8,
+        "name": "",
+        "description": "",
+        "type": "background",
+        "keyword": "Antecedentes",
+        "steps": [
+          {
+            "result": {
+              "duration": 4487171900,
+              "status": "passed"
+            },
+            "line": 9,
+            "name": "que el usuario se encuentra en la pagina de inicio de sesion de SPR",
+            "match": {
+              "location": "RegistroStepDefinitions.queElUsuarioSeEncuentraEnLaPaginaDeInicioDeSesionSPR()"
+            },
+            "keyword": "Dado "
+          },
+          {
+            "result": {
+              "duration": 2635341400,
+              "status": "passed"
+            },
+            "line": 10,
+            "name": "ingrese las credenciales correctas (usuario y contrasena)",
+            "match": {
+              "location": "RegistroStepDefinitions.ingreseLasCredencialesCorrectasUsuarioYContrasena(CredencialesInicio\u003e)"
+            },
+            "rows": [
+              {
+                "cells": [
+                  "rol",
+                  "usuarios",
+                  "clave"
+                ]
+              },
+              {
+                "cells": [
+                  "Contratista",
+                  "isabella@gmail.com",
+                  "12345678"
+                ]
+              }
+            ],
+            "keyword": "Cuando "
+          }
+        ]
+      },
+      {
+        "before": [
+          {
+            "result": {
+              "duration": 77929200,
+              "status": "passed"
+            },
+            "match": {
+              "location": "PreparacionEscenario.setUp()"
+            }
+          }
+        ],
+        "line": 15,
+        "name": "Cerrar sesion correctamente",
+        "description": "",
+        "id": "cerrar-sesion-del-contratista;cerrar-sesion-correctamente",
+        "type": "scenario",
+        "keyword": "Escenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 1591627700,
+              "status": "passed"
+            },
+            "line": 16,
+            "name": "el usuario se dirija al boton de perfil debera seleccionar la opcion de cerrar perfil",
+            "match": {
+              "location": "CerrarContratistaStepDefinitions.elUsuarioSeDirijaAlBotonDePerfilDeberaSeleccionarLaOpcionDeCerrarPerfil()"
+            },
+            "keyword": "Cuando "
+          },
+          {
+            "result": {
+              "duration": 1773500,
+              "status": "passed"
+            },
+            "line": 17,
+            "name": "se cerrara correctamente su perfil",
+            "match": {
+              "location": "CerrarContratistaStepDefinitions.seCerraraCorrectamenteSuPerfil()"
+            },
+            "keyword": "Entonces "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@CerrarSesion"
+          }
+        ]
+      }
+    ],
+    "name": "Cerrar sesion del contratista",
+    "description": "  Como usuario autenticado en la pagina SPR\n  Quiero poder cerrar sesion\n  Para tener mis datos seguros",
+    "id": "cerrar-sesion-del-contratista",
+    "keyword": "Característica",
+    "uri": "src/test/resources/features/CerrarContratista.feature",
+    "tags": []
+  }
+]

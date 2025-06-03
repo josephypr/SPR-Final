@@ -22,7 +22,13 @@ buildscript {
         classpath("net.serenity-bdd:serenity-gradle-plugin:$rootProject.ext.serenityGradleVersion") }
 
 }
+test {
+    useJUnit()
+    systemProperty "cucumber.options", "--plugin pretty --plugin json:target/cucumber.json"
+    finalizedBy 'aggregate'
+}
 dependencies {
+
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: "2.0.0-alpha1"
     implementation group: 'org.hamcrest', name: 'hamcrest', version: "2.2"
     implementation group: 'net.serenity-bdd', name: 'serenity-cucumber', version: "$rootProject.ext.serenityCucumberVersion"
@@ -40,3 +46,4 @@ dependencies {
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version:'4.1.2'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 }
+

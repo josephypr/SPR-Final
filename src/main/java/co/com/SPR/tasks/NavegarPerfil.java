@@ -1,0 +1,17 @@
+package co.com.SPR.tasks;
+
+import co.com.SPR.userinterface.HomeContratista;
+import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.Task;
+import net.serenitybdd.screenplay.Tasks;
+import net.serenitybdd.screenplay.actions.Click;
+import static co.com.SPR.userinterface.Campos.*;
+public class NavegarPerfil implements Task {
+    HomeContratista homeContratista;
+    public static NavegarPerfil navegarPerfil(){ return Tasks.instrumented(NavegarPerfil.class);}
+    @Override
+    public <T extends Actor> void performAs(T actor){actor.attemptsTo(
+            Click.on(BTN_USUARIO),
+            Click.on(BTN_PERFIL)
+    );}
+}
