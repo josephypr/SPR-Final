@@ -17,6 +17,6 @@ Característica: Actualizar el numero registrado del contratista
 
   Escenario: Actualizar el numero telefonico
     Cuando Cuando el usuario oprima el campo a actualizar e ingrese su numero numero telefonico
-    | telefonos   |
-    | 1234  |
+      | telefonos  |
+      | 1234567890 |
     Entonces visualizara una ventana emergente que dira que los datos fueron actualizados

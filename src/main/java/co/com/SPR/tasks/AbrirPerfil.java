@@ -1,16 +1,13 @@
 package co.com.SPR.tasks;
 
-import co.com.SPR.userinterface.HomeContratista;
 import co.com.SPR.userinterface.PerfilContratista;
-import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.Task;
-import net.serenitybdd.screenplay.Tasks;
+import net.serenitybdd.screenplay.*;
 import net.serenitybdd.screenplay.actions.Open;
 
 public class AbrirPerfil implements Task {
 
     PerfilContratista perfilContratista;
-    public static AbrirPerfil elperfil() {
+    public static Performable elperfil() {
         return Tasks.instrumented(AbrirPerfil.class);
     }
     @Override

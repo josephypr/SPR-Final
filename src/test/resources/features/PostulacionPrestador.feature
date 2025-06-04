@@ -8,10 +8,9 @@ Característica: Postulacion Del prestador en un servicio
 
   Antecedentes:
     Dado que el usuario se encuentra en la pagina de inicio de sesion de SPR como prestador
-    Cuando ingrese las credenciales correctas (usuario y contrasena)
+    Cuando ingrese las credenciales correctas con el rol de prestador (usuario y contrasena)
       | rol | usuarios | clave |
-      |Prestador | andrey10santa@gmail.com  | 123456 |
-    Y Cuando el usuario oprima el campo de postularse
+      |Prestador | ariana@gmail.com   | 1234567  |
 
   @PerfilPrestador
   Escenario: postulacion de servicio exitosa

@@ -1,7 +1,10 @@
 package co.com.SPR.stepsdefinitions;
+import co.com.SPR.questions.ValidacionCerrarPerfil;
 import co.com.SPR.tasks.CerrarSesion;
 import cucumber.api.java.es.Cuando;
 import cucumber.api.java.es.Entonces;
+
+import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 public class CerrarContratistaStepDefinitions {
@@ -13,5 +16,6 @@ public class CerrarContratistaStepDefinitions {
 
     @Entonces("^se cerrara correctamente su perfil$")
     public void seCerraraCorrectamenteSuPerfil() {
+        theActorInTheSpotlight().should(seeThat(ValidacionCerrarPerfil.validacionCerrarPerfil()));
     }
 }

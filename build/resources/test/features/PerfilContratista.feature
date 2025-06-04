@@ -8,8 +8,8 @@ Característica: Visualizar el Perfil Del contratista
   Antecedentes:
     Dado que el usuario se encuentra en la pagina de inicio de sesion de SPR
     Cuando ingrese las credenciales correctas (usuario y contrasena)
-      | rol | usuarios | clave |
-      |Contratista | example@gmail.com  | 12345s   |
+      | rol         | usuarios           | clave    |
+      | Contratista | isabella@gmail.com | 12345678 |
 
     @PerfilContratista
     Escenario: Visualizar el perfil exitosamente

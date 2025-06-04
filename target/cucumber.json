@@ -1,9 +1,9 @@
 [
   {
-    "line": 3,
+    "line": 5,
     "elements": [
       {
-        "line": 8,
+        "line": 10,
         "name": "",
         "description": "",
         "type": "background",
@@ -11,25 +11,25 @@
         "steps": [
           {
             "result": {
-              "duration": 4487171900,
+              "duration": 4460253200,
               "status": "passed"
             },
-            "line": 9,
+            "line": 11,
             "name": "que el usuario se encuentra en la pagina de inicio de sesion de SPR",
             "match": {
-              "location": "RegistroStepDefinitions.queElUsuarioSeEncuentraEnLaPaginaDeInicioDeSesionSPR()"
+              "location": "LoginContratistaStepDefinitions.queElUsuarioSeEncuentraEnLaPaginaDeInicioDeSesionSPR()"
             },
             "keyword": "Dado "
           },
           {
             "result": {
-              "duration": 2635341400,
+              "duration": 2521908000,
               "status": "passed"
             },
-            "line": 10,
+            "line": 12,
             "name": "ingrese las credenciales correctas (usuario y contrasena)",
             "match": {
-              "location": "RegistroStepDefinitions.ingreseLasCredencialesCorrectasUsuarioYContrasena(CredencialesInicio\u003e)"
+              "location": "LoginContratistaStepDefinitions.ingreseLasCredencialesCorrectasUsuarioYContrasena(CredencialesInicio\u003e)"
             },
             "rows": [
               {
@@ -55,7 +55,7 @@
         "before": [
           {
             "result": {
-              "duration": 77929200,
+              "duration": 80199300,
               "status": "passed"
             },
             "match": {
@@ -63,50 +63,50 @@
             }
           }
         ],
-        "line": 15,
-        "name": "Cerrar sesion correctamente",
+        "line": 18,
+        "name": "Eliminar portafolio del prestador exitosamente",
         "description": "",
-        "id": "cerrar-sesion-del-contratista;cerrar-sesion-correctamente",
+        "id": "eliminación-del-portafolio-del-perfil-de-prestador-de-spr;eliminar-portafolio-del-prestador-exitosamente",
         "type": "scenario",
         "keyword": "Escenario",
         "steps": [
           {
             "result": {
-              "duration": 1591627700,
+              "duration": 1463805000,
               "status": "passed"
             },
-            "line": 16,
-            "name": "el usuario se dirija al boton de perfil debera seleccionar la opcion de cerrar perfil",
+            "line": 19,
+            "name": "el usuario prestador se  encuentre en su portafolio",
             "match": {
-              "location": "CerrarContratistaStepDefinitions.elUsuarioSeDirijaAlBotonDePerfilDeberaSeleccionarLaOpcionDeCerrarPerfil()"
+              "location": "EliminarPortafolioStepDefinitions.elUsuarioPrestadorSeEncuentreEnSuPortafolio()"
             },
             "keyword": "Cuando "
           },
           {
             "result": {
-              "duration": 1773500,
+              "duration": 3455400,
               "status": "passed"
             },
-            "line": 17,
-            "name": "se cerrara correctamente su perfil",
+            "line": 20,
+            "name": "visualizara y dara click en un boton para eliminar su trabajo, el sistema muestra un mensaje de éxito, cierra la imagen del portafolio de forma exitosa",
             "match": {
-              "location": "CerrarContratistaStepDefinitions.seCerraraCorrectamenteSuPerfil()"
+              "location": "EliminarPortafolioStepDefinitions.visualizaraYDaraClickEnUnBotonParaEliminarSuTrabajoElSistemaMuestraUnMensajeDeÉxitoCierraLaImagenDelPortafolioDeFormaExitosa()"
             },
             "keyword": "Entonces "
           }
         ],
         "tags": [
           {
-            "name": "@CerrarSesion"
+            "name": "@Eliminar"
           }
         ]
       }
     ],
-    "name": "Cerrar sesion del contratista",
-    "description": "  Como usuario autenticado en la pagina SPR\n  Quiero poder cerrar sesion\n  Para tener mis datos seguros",
-    "id": "cerrar-sesion-del-contratista",
+    "name": "Eliminación del portafolio del perfil de prestador de SPR",
+    "description": "  Como usuario prestador registrado en SPR\n  Quiero eliminar mi portafolio permanentemente\n  Para dejar de mostrar trabajos realizado",
+    "id": "eliminación-del-portafolio-del-perfil-de-prestador-de-spr",
     "keyword": "Característica",
-    "uri": "src/test/resources/features/CerrarContratista.feature",
+    "uri": "src/test/resources/features/EliminarPortafolio.feature",
     "tags": []
   }
 ]

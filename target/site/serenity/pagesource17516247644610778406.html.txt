@@ -1,0 +1,931 @@
+<html lang="en"><head>
+    <script type="module">
+import RefreshRuntime from "/@react-refresh"
+RefreshRuntime.injectIntoGlobalHook(window)
+window.$RefreshReg$ = () => {}
+window.$RefreshSig$ = () => (type) => type
+window.__vite_plugin_react_preamble_installed__ = true
+</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/src/assets/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPR</title>  
+  <style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/Login.css">body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.login-container {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to top, #8d8aca 10%, #5a0086 90%) no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.logo {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  font-size: 24px;
+  color: #5a0086;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #5a0086;
+  border-radius: 10px;
+  font-size: 16px;
+  color: gray;
+  background-color: white;
+}
+
+.login-input::placeholder {
+  color: gray;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-morado {
+  flex: 1;
+  padding: 12px;
+  background-color: #5a0086;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-morado:hover {
+  background-color: #7a2dbd;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/RegistroContratista.css">.registro-container {
+  height: 120vh;
+  background: linear-gradient(to top, #8D8ACA 10%, #5A0086 90%) no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registro-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.registro-logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.registro-titulo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5A0086;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #5A0086;
+  border-radius: 8px;
+  background-color: white;
+  color: gray;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: gray;
+}
+
+.foto-input {
+  padding: 5px;
+  background-color: white;
+  color: gray;
+  border: none;
+  margin-bottom: 20px;
+}
+
+.registro-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #5A0086;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.registro-button:hover {
+  background-color: #430066;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/RegistroPrestador.css">.container {
+  background: linear-gradient(to top, #8D8ACA 10%, #5A0086 90%) no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.logo {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5A0086;
+  margin-bottom: 20px;
+}
+
+.input-box {
+  margin-bottom: 20px;
+}
+
+.input-box input,
+.input-box textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #5A0086;
+  border-radius: 5px;
+  background-color: white;
+  color: gray;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-box textarea {
+  height: 40px;
+  resize: none;
+}
+
+button {
+  background-color: #5A0086;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #7a3aa4;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/EscogerRol.css">.escoger-rol-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to top, #8d8aca 10%, #5a0086 90%);
+}
+
+.escoger-rol-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.logo-rol {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #5A0086;
+}
+
+.rol-buttons button {
+  margin: 10px;
+  padding: 12px 24px;
+  background-color: #5A0086;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.rol-buttons button:hover {
+  background-color: #7e33b5;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/index.css">body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #eaeaea;
+}
+
+/* HEADER */
+.header {
+  background-color: #5A0086;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  font-weight: bold;
+}
+
+.spr {
+  font-size: 32px;
+}
+
+.header-buttons button {
+  margin-left: 20px;
+  padding: 10px 20px;
+  background-color: white;
+  color: #5A0086;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.header-buttons button:hover {
+  background-color: #d1a5f0;
+}
+
+/* QUIENES SOMOS */
+.info-section {
+  background-color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #5A0086;
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 18px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: black;
+  text-align: justify;
+}
+
+.centrado {
+  text-align: center;
+}
+
+/* SERVICIOS */
+.servicios-seccion {
+  background-color: #5A0086;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.title-servicios {
+  font-size: 28px;
+  font-weight: bold;
+  color: rgb(241, 234, 234);
+  margin-bottom: 30px;
+}
+
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  justify-content: center;
+}
+
+
+.imagenes-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* OBJETIVO PRINCIPAL Y ALCANCE */
+.extra-section {
+  background-color: white;
+  padding: 40px 20px 50px 20px;
+}
+
+.alcance-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alcance-izquierda,
+.alcance-derecha {
+  flex: 1 1 400px;
+  font-size: 18px;
+  color: black;
+  text-align: justify;
+}
+
+.footer {
+  background-color: #5A0086;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.footer-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.footer-text {
+  font-size: 18px;
+  margin: 0;
+}
+
+.card-servicio {
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.card-servicio img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 2px solid #5A0086;
+}
+
+.card-servicio h3 {
+  margin: 15px 0;
+  color: #5A0086;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-servicio:hover {
+  transform: translateY(-5px);
+}
+
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card-servicio img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/home.css">* General */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #5A0086;
+  padding: 5px 30px; /* Más espaciado */
+  color: white;
+  position: relative;
+}
+
+
+.logo {
+  max-height: 100px;  /* Ajustar la altura máxima */
+  max-width: 100%;  /* Asegura que no se estire */
+  object-fit: contain;  /* Mantiene la proporción sin distorsionar */
+}
+
+
+.usuario {
+  position: relative;
+  cursor: pointer;
+  display: flex; /* Añadimos flexbox al contenedor del usuario */
+  align-items: center; /* Centramos verticalmente los elementos dentro del contenedor */
+}
+
+.perfil-icono {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+/* Menú desplegable */
+.menu-desplegable {
+  position: absolute;
+  top: 55px;
+  right: 20px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.menu-desplegable button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: #5A0086;
+}
+
+.menu-desplegable button:hover {
+  background-color: #f0f0f0;
+  color: #5A0086;
+}
+
+/* Contenido principal */
+.contenido {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.sidebar li {
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.sidebar select,
+.sidebar input[type="range"] {
+  width: 100%;
+  margin-bottom: 20px;
+  margin-left: -10px;
+}
+
+/* Sección de servicios */
+.seccion-servicios {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Barra de búsqueda */
+.barra-busqueda {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.barra-busqueda input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.barra-busqueda select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Grid de servicios */
+.grid-servicios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card-servicio {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.card-servicio img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.card-servicio h4 {
+  margin: 10px 0 5px;
+}
+
+.card-servicio p {
+  margin: 0 0 10px;
+  color: #5a189a;
+  font-weight: bold;
+}
+
+.card-servicio button {
+  background-color: #5a189a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card-servicio button:hover {
+  background-color: #7b2cbf;
+}
+
+.nombre-usuario {
+  margin-right: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 104aea9c5f0001b6abd1a21ed85982a8819ed8e9
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/homePrestador.css">.portafolio-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f5f5f5; 
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease; 
+  text-align: center;
+}
+
+.portafolio-btn:hover {
+  background-color: #8a2be8; 
+  color: white;
+  border-color: #8a2be8;
+}
+
+
+.postular-btn {
+  padding: 15px 25px;
+  background-color: #6a0dad;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px;
+}
+
+.mini-perfil {
+  margin-top: 15px;
+  padding: 15px;
+  border: 2px solid #6a0dad;
+  border-radius: 12px;
+  background-color: #f3e5ff;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mini-perfil img.perfil-icono {
+  width: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.mini-perfil p {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.mini-perfil h4 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.mini-perfil button {
+  padding: 10px 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.mini-perfil button:hover {
+  background-color: #c82333;
+}
+
+.mini-perfil img.whatsapp-icono {
+  width: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/perfil.css">.perfil-imagen {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Hace que sea redonda */
+  object-fit: cover;  /* Asegura que la imagen se recorte bien si es rectangular */
+  border: 3px solid #ccc; /* Borde gris claro */
+  margin: 0 auto 1rem auto; /* Centrada y con margen inferior */
+  display: block;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  transition: transform 0.3s ease; /* Efecto suave al pasar el mouse */
+}
+
+.perfil-imagen:hover {
+  transform: scale(1.05); /* Hace un ligero zoom al pasar el mouse */
+}
+
+.perfil-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.perfil-titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #4a2c97;
+}
+
+.perfil-form .perfil-group {
+  margin-bottom: 1rem;
+}
+
+.perfil-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.perfil-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.perfil-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+.btn-volver {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-volver:hover {
+  background-color: #5a6268;
+}
+
+
+.btn-editar { background: #4a2c97; color: #fff; }
+.btn-guardar { background: #28a745; color: #fff; }
+.btn-cancelar { background: #6c757d; color: #fff; }
+.boton-eliminar { background: #dc3545; color: #fff; }
+</style><style type="text/css" data-vite-dev-id="C:/Users/PC/Desktop/SPR-Final/src/styles/Portafolio.css">.portafolio-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.servicio-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #8a2be8;
+  border-radius: 5px;
+}
+
+.btn-agregar, .btn-guardar {
+  background-color: #8a2be8;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 10px 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-eliminar-porta {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/* Portafolio.css */
+.portafolio-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.servicio-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.portafolios-guardados {
+  margin-top: 40px;
+}
+
+.portafolios-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.portafolio-item {
+  position: relative;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.portafolio-item:hover {
+  transform: translateY(-5px);
+}
+
+.portafolio-imagen {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.portafolio-descripcion {
+  padding: 15px;
+  font-size: 14px;
+  color: #333;
+  min-height: 80px;
+}
+
+.btn-eliminar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(244, 67, 54, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.btn-agregar, .btn-guardar {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.btn-agregar:hover, .btn-guardar:hover {
+  background: #45a049;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 10px;
+}</style></head>
+  <body>
+    <div id="root"><div class="perfil-container"><h2 class="perfil-titulo">Perfil Contratista</h2><form class="perfil-form"><img alt="Foto de perfil" class="perfil-imagen" src="https://res.cloudinary.com/dymxlvysw/image/upload/v1747759931/pv16x9cejmofprshcir2.jpg"><div class="rating-section"><h3>Calificación</h3><p class="no-reviews">Aún no hay calificaciones</p></div><div class="perfil-group"><label>Nombres</label><input class="perfil-input" value="isabella" name="nombres"></div><div class="perfil-group"><label>Apellidos</label><input class="perfil-input" value="Ramirez" name="apellidos"></div><div class="perfil-group"><label>Correo</label><input class="perfil-input" value="isabella@gmail.com" name="correo"></div><div class="perfil-group"><label>Celular</label><input class="perfil-input" value="3004805583" name="celular"></div><div class="perfil-group"><label>Dirección</label><input class="perfil-input" value="CALLE 50 A SUR N36-89" name="direccion"></div><div class="perfil-group"><label>Fecha de nacimiento</label><input class="perfil-input" type="date" value="2000-02-11" name="fecha_nacimiento"></div><div class="perfil-buttons"><button type="button" class="btn btn-guardar">Guardar</button><button type="button" class="btn btn-cancelar">Cancelar</button><button type="button" class="btn btn-volver">Volver al inicio</button><button type="button" class="btn boton-eliminar">Eliminar cuenta</button></div></form></div></div>
+    <script type="module" src="/src/main.jsx?t=1748988501951"></script>
+  
+
+</body></html>

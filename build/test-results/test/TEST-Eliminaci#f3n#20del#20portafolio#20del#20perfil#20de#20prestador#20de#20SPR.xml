@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Eliminación del portafolio del perfil de prestador de SPR" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-06-04T20:56:17" hostname="DESKTOP-ANNV5C6" time="9.386">
+  <properties/>
+  <testcase name="Eliminar portafolio del prestador exitosamente" classname="Eliminación del portafolio del perfil de prestador de SPR" time="9.386"/>
+  <system-out><![CDATA[    ?[32mDado ?[0m?[32mque el usuario se encuentra en la pagina de inicio de sesion de SPR?[0m ?[90m# LoginContratistaStepDefinitions.queElUsuarioSeEncuentraEnLaPaginaDeInicioDeSesionSPR()?[0m
+    ?[32mCuando ?[0m?[32mingrese las credenciales correctas (usuario y contrasena)?[0m         ?[90m# LoginContratistaStepDefinitions.ingreseLasCredencialesCorrectasUsuarioYContrasena(CredencialesInicio>)?[0m
+
+  @Eliminar
+  Escenario: Eliminar portafolio del prestador exitosamente                                                                                                          ?[90m# src/test/resources/features/EliminarPortafolio.feature:18?[0m
+    ?[32mCuando ?[0m?[32mel usuario prestador se  encuentre en su portafolio?[0m                                                                                                       ?[90m# EliminarPortafolioStepDefinitions.elUsuarioPrestadorSeEncuentreEnSuPortafolio()?[0m
+    ?[32mEntonces ?[0m?[32mvisualizara y dara click en un boton para eliminar su trabajo, el sistema muestra un mensaje de éxito, cierra la imagen del portafolio de forma exitosa?[0m ?[90m# EliminarPortafolioStepDefinitions.visualizaraYDaraClickEnUnBotonParaEliminarSuTrabajoElSistemaMuestraUnMensajeDeÉxitoCierraLaImagenDelPortafolioDeFormaExitosa()?[0m
+]]></system-out>
+  <system-err><![CDATA[jun. 04, 2025 3:56:17 P. M. org.openqa.selenium.remote.DesiredCapabilities chrome
+INFO: Using `new ChromeOptions()` is preferred to `DesiredCapabilities.chrome()`
+[Test worker] INFO net.serenitybdd.core.webdriver.driverproviders.ProvideNewDriver - Instantiating driver
+[Test worker] INFO net.serenitybdd.core.webdriver.driverproviders.ProvideNewDriver - Driver capabilities: Capabilities {acceptInsecureCerts: false, browserName: chrome, goog:chromeOptions: {args: [], extensions: [], prefs: {behavior: allow}}, loggingPrefs: org.openqa.selenium.logging..., name: proyecto, platform: ANY, unhandledPromptBehavior: ignore, version: }
+Starting ChromeDriver 136.0.7103.94 (fa0be0b33debeb378a8e6ad9c599be34e2dc3b37-refs/branch-heads/7103@{#1842}) on port 8974
+Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+ChromeDriver was started successfully on port 8974.
+jun. 04, 2025 3:56:20 P. M. org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+[Test worker] INFO net.thucydides.core.steps.ConsoleLoggingListener - 
+        __    _____ _____ ____ _____   ____   _    ____  ____  _____ ____  
+  _     \ \  |_   _| ____/ ___|_   _| |  _ \ / \  / ___|/ ___|| ____|  _ \ 
+ (_)_____| |   | | |  _| \___ \ | |   | |_) / _ \ \___ \\___ \|  _| | | | |
+  _|_____| |   | | | |___ ___) || |   |  __/ ___ \ ___) |___) | |___| |_| |
+ (_)     | |   |_| |_____|____/ |_|   |_| /_/   \_\____/|____/|_____|____/ 
+        /_/                                                                
+
+TEST PASSED: Eliminar portafolio del prestador exitosamente
+----------------------------------------------------------------------------
+]]></system-err>
+</testsuite>

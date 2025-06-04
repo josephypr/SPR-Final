@@ -148,7 +148,7 @@
             $("#requirements-tabs").tabs();
             $("#test-tabs").tabs();
 
-            var requirementsTree = [{"text":"Eliminación de perfil de SPR","type":"feature","href":"4a6e556c21c14a2baab9ce54029e5df6bf775812e0a6047ead3b7417df068a62.html","nodes":[],"selectable":false,"tags":["",""]}];
+            var requirementsTree = [{"text":"Eliminación de perfil de SPR","type":"feature","href":"4a6e556c21c14a2baab9ce54029e5df6bf775812e0a6047ead3b7417df068a62.html","nodes":[],"selectable":false,"tags":["","\u003cspan class\u003d\u0027feature-count\u0027\u003e1 scenario\u003c/span\u003e"]}];
 
             $('#tree').treeview({
                 data: requirementsTree,
@@ -217,7 +217,7 @@
             <a href="#"><i class="fa fa-comments-o"></i> Features</a>
         </li>
     </ul>
-    <span class="date-and-time"><a href="build-info.html"><i class="fa fa-info-circle"></i></a> Report generated </span>
+    <span class="date-and-time"><a href="build-info.html"><i class="fa fa-info-circle"></i></a> Report generated 04-06-2025 15:07</span>
     <br style="clear:left"/>
 </div>
 
@@ -231,18 +231,30 @@
                         <div>
                             <div clas="table">
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-8">
                                     <span>
                                             <h2><i class="fa fa-book"></i> Feature:  Eliminaci&oacute;n De Perfil De SPR</h2>
                                         </span>
                                 </div>
+                                    <div class="col-sm-4">
+                                        <span class="feature-tags">
+                                                <p class="tag">
+                                                    <span class="badge tag-badge" style="background:default;">
+                                                        <i class="fa fa-tag"></i>&nbsp;<a class="tagLink"
+                                                                                          style="background:default;"
+                                                                                          href="c9d76aef19e4aacf94a8dace567b5c2c5fb582a757337617e7f609c06373ac6c.html">Eliminar
+                                                        (tag)</a>
+                                                    </span>
+                                                </p>
+                                        </span>
+                                    </div>
                                 </div>
                                 </div>
                             </div>
                             <div class="requirementNarrativeTitle">
-                                Como usuario postulado en un servicio<br />
-Quiero poder eliminar la postulacion previamente hecha<br />
-Para dejar de tener servicios postulados.
+                                Como usuario registrado en SPR<br />
+Quiero eliminar mi perfil permanentemente<br />
+Para dejar de tener acceso a la plataforma.
                             </div>
 
                         </div>
@@ -275,11 +287,73 @@ Para dejar de tener servicios postulados.
 
                                             <div id="toc">
                                                 <table class="table" id="toc-table">
+                                                        <tr>
+                                                            <td style="width:95%;" class="toc-title">
+                                                                <a href="#98df0c4492db0e905d8937589a39aef989281e825e29634c6b6845a12c7d1bc0" title="View scenario details" >Eliminar cuenta de usuario exitosamente</a>
+
+
+                                                            </td>
+                                                            <td style="width:5%;">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a style="margin-left:0.5em;padding-right: 1.5em;"
+                                                                               href="309b179dba5040e36b86c2621014151c8e9c14ec62e150852fccf4d021a2d103.html"
+                                                                               title="View test results">
+                                                                            <a href='##beforetable'><i class='far fa-stop-circle pending-icon ' title='PENDING'></i></a>
+                                                                            </a>
+
+                                                                        
+                                                                        </td>
+                                                                        <td>
+                                                                            <a style="margin-left:0.5em;padding-right: 1.5em;"
+                                                                               href="309b179dba5040e36b86c2621014151c8e9c14ec62e150852fccf4d021a2d103.html"
+                                                                               title="View test results">
+                                                                                <i class="fas fa-search-plus"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
                                                 </table>
 
                                             </div>
 
                                             <h3>Scenario details</h3>
+
+                                                <div class="scenario-docs card" id="98df0c4492db0e905d8937589a39aef989281e825e29634c6b6845a12c7d1bc0">
+                                                    <div class="scenario-docs card-header pending" style="min-height:1.5em;">
+                                                        <div>
+                                                            <span class="scenario-heading">
+                                                                <a href="309b179dba5040e36b86c2621014151c8e9c14ec62e150852fccf4d021a2d103.html" title="View test results">Eliminar cuenta de usuario exitosamente</a>
+                                                            </span>
+                                                            <span class="scenario-result-icon">
+                                                                
+
+                                                                    <a href='##beforetable'><i class='far fa-stop-circle pending-icon ' title='PENDING'></i></a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="scenario-docs card-body">
+                                                            <p>Dado que el usuario se encuentra en la pagina de inicio de sesion de SPR</p>
+                                                            <p><p>Cuando ingrese las credenciales correctas (usuario y contrasena)</p>
+<table>
+<thead>
+<tr><th>rol</th><th>usuarios</th><th>clave</th></tr>
+</thead>
+<tbody>
+<tr><td>Contratista</td><td>isabella@gmail.com</td><td>12345678</td></tr>
+</tbody>
+</table>
+</p>
+                                                            <p>Y Cuando el usuario ira al apartado de usuario y seleccionara la opcion de perfil</p>
+                                                            <p>Cuando el usuario se  encuentre en su perfil</p>
+                                                            <p>Entonces visualizara y dara click en un boton para eliminar su cuenta el sistema muestra un mensaje de éxito, cierra la sesión automáticamente</p>
+                                                        <div class="examples">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -288,7 +362,41 @@ Para dejar de tener servicios postulados.
                             <div id="results" class="tab-pane fade">
                                 <div class="container-fluid">
                                     <div class="row">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-4">
+
+                                            <div style="width:300px;" class="chart-container automated-and-manual-results">
+                                                <div class="ct-chart ct-square"></div>
+                                            </div>
+                                            <script>
+
+                                                var labels = [' ', ' ', '100%', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+                                                // Our series array that contains series objects or in this case series data arrays
+
+                                                var series = [{meta: 'Passing tests (automated)', value: 0}, {meta: 'Passing tests (manual)', value: 0}, {meta: 'Pending tests (automated)', value: 1}, {meta: 'Pending tests (manual)', value: 0}, {meta: 'Ignored tests (automated)', value: 0}, {meta: 'Ignored tests (manual)', value: 0}, {meta: 'Skipped tests (automated)', value: 0}, {meta: 'Skipped tests (manual)', value: 0}, {meta: 'Failing tests (automated)', value: 0}, {meta: 'Failing tests (manual)', value: 0}, {meta: 'Broken tests (automated)', value: 0}, {meta: 'Broken tests (manual)', value: 0}, {meta: 'Compromised tests (automated)', value: 0}, {meta: 'Compromised tests (manual)', value: 0}];
+
+                                                // As options we currently only set a static size of 300x200 px. We can also omit this and use aspect ratio containers
+                                                // as you saw in the previous example
+                                                var options = {
+                                                    width: 350,
+                                                    height: 300
+                                                };
+
+                                                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                                                    new Chartist.Pie('.ct-chart', {
+                                                        series: series,
+                                                        labels: labels,
+                                                    }, {
+                                                        donut: true,
+                                                        donutWidth: 60,
+                                                        donutSolid: true,
+                                                        startAngle: 270,
+                                                        showLabel: true
+                                                    }, options);
+                                                });
+
+                                            </script>
+                                        </div>
+                                        <div class="col-sm-8">
 
                                         <table class="table">
                                             <thead>
@@ -308,11 +416,12 @@ Para dejar de tener servicios postulados.
                                                 <td class="automated-stats"> </td>
                                             </tr>
                                             <tr>
-                                                                    <td class="aggregate-result-count"><i
-                                                                            class='fa fa-stop-circle-o pending-icon'></i>&nbsp;Pending
+                                                                    <td class="aggregate-result-count">
+                                                                        <a href="96d15d75cdc8320bc15ccb3ba83541f2f89e1bc83cae2084a11ee559c455c297.html"><i
+                                                                                class='fa fa-stop-circle-o pending-icon'></i>&nbsp;Pending</a>
                                                                     </td>
-                                                <td class="automated-stats">0</td>
-                                                <td class="automated-stats"> </td>
+                                                <td class="automated-stats">1</td>
+                                                <td class="automated-stats">100%</td>
                                             </tr>
                                             <tr>
                                                                 <td class="aggregate-result-count"><i
@@ -359,7 +468,7 @@ Para dejar de tener servicios postulados.
                                             </tr>
                                             <tr class="summary-stats">
                                                 <td class="aggregate-result-count">Total</td>
-                                                <td class="automated-stats">0</td>
+                                                <td class="automated-stats">1</td>
                                                 <td class="automated-stats"></td>
                                             </tr>
                                             </tbody>
@@ -381,11 +490,11 @@ Para dejar de tener servicios postulados.
                                                     </thead>
                                                     <tbody>
                                                     <tr>
-                                                        <td>0ms</td>
-                                                        <td>0ms</td>
-                                                        <td>0ms</td>
-                                                        <td>0ms</td>
-                                                        <td>0ms</td>
+                                                        <td>7s</td>
+                                                        <td>7ms</td>
+                                                        <td>7s</td>
+                                                        <td>7s</td>
+                                                        <td>7s</td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -397,7 +506,31 @@ Para dejar de tener servicios postulados.
                                             <div class="col-sm-12">
                                                 <h3><i class="fas fa-cogs"></i> Automated Tests</h3>
 
-                                            No automated tests were executed
+                                            <table class="scenario-result-table table" id="scenario-results">
+                                                <thead>
+                                                <tr>
+                                                    <th class="test-name-column">Scenario</th>
+                                                    <th>Steps</th>
+                                                    <th>Start Time</th>
+                                                    <th>Duration</th>
+                                                    <th>Result</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="scenario-result PENDING">
+                                                    <td>
+                                                            <a href="309b179dba5040e36b86c2621014151c8e9c14ec62e150852fccf4d021a2d103.html">Eliminar cuenta de usuario exitosamente</a>
+                                                    </td>
+                                                    <td>5</td>
+                                                    <td>15:07:56</td>
+                                                    <td>7s 151ms</td>
+                                                    <td>
+                                                            <a href='##beforetable'><i class='far fa-stop-circle pending-icon ' title='PENDING'></i></a> <span
+                                                                style="display:none">PENDING</span>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
 
                                             </div>
                                         </div>

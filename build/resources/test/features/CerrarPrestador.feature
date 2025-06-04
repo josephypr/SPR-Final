@@ -6,12 +6,12 @@ Característica: Finalizar sesión del prestador
   Para proteger mi información personal
 
   Antecedentes:
-    Dado que el prestador ha accedido a la pantalla de inicio de sesión de SPR
-    Cuando introduce las credenciales válidas (usuario y contrasena)
-      | rol      | usuarios           | clave   |
-      |Prestador | joseph@gmail.com   | 123456  |
+    Dado que el usuario se encuentra en la pagina de inicio de sesion de SPR como prestador
+    Cuando ingrese las credenciales correctas con el rol de prestador (usuario y contrasena)
+      | rol | usuarios | clave |
+      |Prestador | ariana@gmail.com   | 1234567  |
 
   @CerrarSesion
   Escenario: Finalizar sesión exitosamente
-    Cuando el prestador accede al ícono de perfil y elige la opción para salir de la cuenta
-    Entonces su sesión se cerrará de forma satisfactoria
+    Cuando el prestador accede al oprima el boton usuario y seleccione la opción para salir de la cuenta
+    Entonces su sesión se cerrará de forma satisfactoria y regresara al inicio de spr
