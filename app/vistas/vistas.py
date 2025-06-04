@@ -1,11 +1,13 @@
 import datetime
 from flask_restful import Resource
 from flask import request 
-from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol, CalificacionSchema, Calificacion
+from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol, CalificacionSchema, Calificacion, Portafolio, PortafolioSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
 from cloudinary.uploader import upload
 from werkzeug.utils import secure_filename
 import cloudinary.uploader
+portafolio_schema = PortafolioSchema()
+portafolios_schema = PortafolioSchema(many=True)
 usuario_schema = UsuarioSchema()
 mensajes_schema = MensajesSchema
 calificaciones_schema = CalificacionSchema
@@ -242,3 +244,73 @@ class Vista_Calificacion_Prestador(Resource):
     def get(self, cedula):
         calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
         return calificaciones_schema.dump(calificaciones), 200
+    
+class VistaPortafolio(Resource):
+    @jwt_required()
+    def post(self):
+        try:
+            cedula_usuario = get_jwt_identity()
+            usuario = Usuario.query.get(cedula_usuario)
+
+            if not usuario:
+                return {'mensaje': 'Usuario no encontrado'}, 404
+
+            nuevos_portafolios = []
+            index = 0
+            
+            while True:
+                descripcion = request.form.get(f'servicios[{index}][descripcion]')
+                imagen = request.files.get(f'servicios[{index}][imagen]')
+
+                if not descripcion or not imagen:
+                    break
+
+                # Subir imagen a Cloudinary
+                resultado = cloudinary.uploader.upload(imagen)
+                url_imagen = resultado.get('secure_url')
+
+                nuevo_portafolio = Portafolio(
+                    descripcion=descripcion,
+                    imagenes=url_imagen,
+                    usuario_cedula=cedula_usuario
+                )
+                db.session.add(nuevo_portafolio)
+                nuevos_portafolios.append(nuevo_portafolio)
+                index += 1
+
+            db.session.commit()
+            return portafolios_schema.dump(nuevos_portafolios), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return {'mensaje': f'Error al crear portafolios: {str(e)}'}, 500
+
+    @jwt_required()
+    def get(self):
+        try:
+            cedula_usuario = get_jwt_identity()
+            portafolios = Portafolio.query.filter_by(usuario_cedula=cedula_usuario).all()
+            return portafolios_schema.dump(portafolios), 200
+        except Exception as e:
+            return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
+
+class VistaPortafolioDetalle(Resource):
+    @jwt_required()
+    def delete(self, id_portafolio):
+        try:
+            cedula_usuario = get_jwt_identity()
+            portafolio = Portafolio.query.filter_by(
+                id_portafolio=id_portafolio,
+                usuario_cedula=cedula_usuario
+            ).first()
+            
+            if not portafolio:
+                return {'mensaje': 'Portafolio no encontrado'}, 404
+                
+            db.session.delete(portafolio)
+            db.session.commit()
+            return {'mensaje': 'Portafolio eliminado correctamente'}, 200
+            
+        except Exception as e:
+            db.session.rollback()
+            return {'mensaje': f'Error al eliminar portafolio: {str(e)}'}, 500

@@ -71,7 +71,7 @@ class Portafolio(db.Model):
     __tablename__ = 'portafolios'
     id_portafolio = db.Column(db.Integer, primary_key=True)
     descripcion = db.Column(db.String(128))
-    imagenes = db.Column(db.String(300))
+    imagenes = db.Column(db.String(500))
     usuario_cedula = db.Column(db.Integer, db.ForeignKey('usuario.cedula'))
 
 class Reserva(db.Model):
