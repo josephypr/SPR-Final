@@ -9,9 +9,12 @@ import Index from './index';
 import Home from "./feature/home/home";
 import HomePrestador from "./feature/home/homePrestador";
 import PerfilContratista from './feature/auth/perfilcontratista';
+import Homecontratista from './feature/home/homeContratista'
 import PerfilPrestador from './feature/auth/perfilPrestador';
 import Perfil from './feature/auth/perfil';
 import ProtectedRoute from './feature/auth/ProtectedRoute';
+import Portafolioprestador from './feature/servicios/portafolioprestador';
+
 
 function App() {
   return (
@@ -20,15 +23,30 @@ function App() {
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<EscogerRol />} />
-        <Route path="/RegistroContratista" element={<RegistroContratista />} />
+        <Route path="/Registrocontratista" element={<RegistroContratista />} />
         <Route path="/RegistroPrestador" element={<RegistroPrestador />} />
         <Route path="/Perfil" element={<Perfil />} />
         <Route path="/Prestador" element={<PerfilPrestador/>} />
+        
+
+        
 
         {/* Rutas protegidas */}
-        <Route path="/home" element={
-          <ProtectedRoute element={<Home />} />
+     
+
+         <Route path="/homecontratista" element={
+          <ProtectedRoute element={< Homecontratista/>} />
         } />
+
+        <Route path="/home" element={
+          <ProtectedRoute element={< Home/>} />
+        } />
+
+        <Route 
+          path="/portafolio" 
+          element={<ProtectedRoute element={<Portafolioprestador />} 
+          />} 
+          />
 
         <Route path="/homePrestador" element={
           <ProtectedRoute element={<HomePrestador />} />

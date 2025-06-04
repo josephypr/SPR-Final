@@ -1,152 +1,24 @@
-/* General layout */
-.home {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5; /* Light gray background */
+.portafolio-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f5f5f5; 
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease; 
+  text-align: center;
 }
 
-/* Header styling */
-.header {
-    background-color: #6a0dad; /* Tu púrpura oscuro */
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+.portafolio-btn:hover {
+  background-color: #8a2be8; 
+  color: white;
+  border-color: #8a2be8;
 }
 
-.header .logo {
-    height: 50px; /* Adjust as needed */
-    width: auto;
-}
 
-.header .usuario {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    position: relative; /* For dropdown positioning */
-}
-
-.header .nombre-usuario {
-    margin-right: 10px;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.header .perfil-icono { /* Icono pequeño en la cabecera */
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
-}
-
-/* Dropdown menu */
-.menu-desplegable {
-    position: absolute;
-    top: 55px; /* Position below the profile icon */
-    right: 0;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    z-index: 1000; /* Ensure it appears above other content */
-    overflow: hidden; /* For smooth border-radius */
-}
-
-.menu-desplegable button {
-    background: none;
-    border: none;
-    padding: 12px 20px;
-    text-align: left;
-    font-size: 1em;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.menu-desplegable button:hover {
-    background-color: #f0f0f0;
-}
-
-/* Main content area */
-.contenido {
-    display: flex;
-    flex: 1; /* Takes remaining space */
-}
-
-/* Sidebar styling */
-.sidebar {
-    width: 250px;
-    background-color: #fff;
-    padding: 25px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    border-right: 1px solid #eee;
-}
-
-.sidebar h3 {
-    color: #6a0dad; /* Tu púrpura oscuro */
-    margin-bottom: 15px;
-    font-size: 1.4em;
-    border-bottom: 2px solid #6a0dad; /* Línea del color de tu tema */
-    padding-bottom: 8px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar li {
-    padding: 10px 0;
-    font-size: 1.05em;
-    color: #555;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.sidebar li:hover {
-    color: #6a0dad; /* Tu púrpura oscuro */
-    font-weight: bold;
-}
-
-.sidebar select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
-    color: #333;
-    background-color: #fff;
-    cursor: pointer;
-    -webkit-appearance: none; /* Remove default arrow on select */
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 20px;
-}
-
-/* Main services section */
-.seccion-servicios {
-    flex: 1; /* Takes remaining space */
-    padding: 30px;
-    background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align button to the left */
-}
-
-/* Your .postular-btn styles */
 .postular-btn {
     padding: 15px 25px;
     background-color: #6a0dad; /* Tu púrpura oscuro */
@@ -171,182 +43,50 @@
 
 /* Your .mini-perfil styles, with adjustments */
 .mini-perfil {
-    margin-top: 15px;
-    padding: 25px; /* Aumentado padding */
-    border: 2px solid #6a0dad; /* Tu púrpura oscuro */
-    border-radius: 12px;
-    background-color: #f3e5ff; /* Tu púrpura muy claro */
-    width: 100%; /* Permite que ocupe todo el espacio disponible */
-    max-width: 350px; /* Ajustado para que se vea más grande como en la imagen */
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px; /* Espacio entre los elementos */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  padding: 15px;
+  border: 2px solid #6a0dad;
+  border-radius: 12px;
+  background-color: #f3e5ff;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.mini-perfil img.perfil-icono-grande { /* Usar esta clase para el icono GRANDE dentro del mini-perfil */
-    width: 100px; /* Tamaño más grande para la foto de perfil en el mini-perfil */
-    height: 100px; /* Para mantener la proporción */
-    border-radius: 50%;
-    object-fit: cover; /* Para que la imagen no se distorsione */
-    border: 3px solid #6a0dad; /* Borde del color de tu tema */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.mini-perfil h4 {
-    color: #6a0dad; /* Tu púrpura oscuro */
-    font-size: 1.5em; /* Un poco más grande */
-    margin-bottom: 5px;
+.mini-perfil img.perfil-icono {
+  width: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
 }
 
 .mini-perfil p {
-    text-align: center;
-    margin-bottom: 10px; /* Ajustado */
-    line-height: 1.5; /* Mejor legibilidad */
-    max-height: 100px; /* Para evitar descripciones demasiado largas */
-    overflow: auto; /* Añade scroll si la descripción es muy larga */
+  text-align: center;
+  margin-bottom: 5px;
 }
 
-/* Estilos para el enlace de WhatsApp (como botón) */
-.whatsapp-link {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Espacio entre el icono y el texto */
-    background-color: #25D366; /* WhatsApp green */
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 25px; /* Bordes más redondeados */
-    text-decoration: none; /* Quitar subrayado */
-    font-weight: bold;
-    font-size: 1em;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+.mini-perfil h4 {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.whatsapp-link:hover {
-    background-color: #1DA851; /* Un poco más oscuro en hover */
-    transform: translateY(-2px);
-}
-
-.whatsapp-icono { /* Icono de WhatsApp */
-    width: 24px; /* Tamaño razonable para un icono */
-    height: 24px;
-}
-
-.mini-perfil button { /* Botón "Eliminar postulación" */
-    padding: 10px 20px; /* Un poco más de padding */
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 8px; /* Bordes más redondeados */
-    cursor: pointer;
-    font-size: 0.95em; /* Un poco más pequeño */
-    margin-top: 15px; /* Ajustado */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.mini-perfil button {
+  padding: 10px 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .mini-perfil button:hover {
-    background-color: #c82333;
-    transform: translateY(-1px);
+  background-color: #c82333;
 }
 
-
-/* Media queries for responsiveness */
-@media (max-width: 992px) {
-    .sidebar {
-        width: 200px;
-        padding: 20px;
-    }
-
-    .seccion-servicios {
-        padding: 20px;
-    }
-
-    .postular-btn {
-        padding: 10px 20px;
-        font-size: 1em;
-    }
-}
-
-@media (max-width: 768px) {
-    .header {
-        padding: 10px 20px;
-    }
-    .header .logo {
-        height: 40px;
-    }
-    .header .nombre-usuario {
-        font-size: 1em;
-    }
-    .header .perfil-icono {
-        width: 35px;
-        height: 35px;
-    }
-    .menu-desplegable {
-        top: 48px;
-    }
-
-    .contenido {
-        flex-direction: column; /* Stack sidebar and main section vertically */
-    }
-
-    .sidebar {
-        width: 100%; /* Full width sidebar */
-        border-bottom: 1px solid #eee;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        border-right: none;
-    }
-
-    .seccion-servicios {
-        align-items: center; /* Center content horizontally */
-        padding: 20px 15px;
-    }
-
-    .mini-perfil {
-        width: 90%;
-        max-width: 400px; /* Adjust max-width for smaller screens */
-    }
-}
-
-@media (max-width: 480px) {
-    .header {
-        padding: 10px 15px;
-    }
-    .header .nombre-usuario {
-        display: none; /* Hide name on very small screens */
-    }
-    .header .perfil-icono {
-        width: 30px;
-        height: 30px;
-    }
-    .menu-desplegable {
-        top: 40px;
-    }
-
-    .sidebar h3 {
-        font-size: 1.2em;
-    }
-    .sidebar li {
-        font-size: 0.95em;
-    }
-    .sidebar select {
-        font-size: 0.9em;
-    }
-
-    .postular-btn {
-        width: 100%; /* Full width button */
-    }
-
-    .mini-perfil {
-        padding: 15px;
-    }
-    .mini-perfil h4 {
-        font-size: 1.3em;
-    }
-    .mini-perfil p {
-        font-size: 0.9em;
-    }
+.mini-perfil img.whatsapp-icono {
+  width: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

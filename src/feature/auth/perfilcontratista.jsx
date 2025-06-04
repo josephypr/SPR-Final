@@ -347,7 +347,7 @@ const PerfilContratista = () => {
                         Volver al inicio
                     </button>
 
-                    <button type="button" className="btn btn-eliminar" onClick={handleEliminar}>
+                    <button type="button" className="btn boton-eliminar" onClick={handleEliminar}>
                         Eliminar cuenta
                     </button>
                 </div>

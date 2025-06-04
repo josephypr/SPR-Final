@@ -31,17 +31,10 @@ body {
 }
 
 .usuario {
-<<<<<<< HEAD
-  position: relative;
-  cursor: pointer;
-  display: flex; /* Añadimos flexbox al contenedor del usuario */
-  align-items: center; /* Centramos verticalmente los elementos dentro del contenedor */
-=======
     position: relative;
     cursor: pointer;
     display: flex;
     align-items: center;
->>>>>>> Andrey
 }
 
 .nombre-usuario {
@@ -352,7 +345,7 @@ body {
     background-color: #7b2cbf;
 }
 
-<<<<<<< HEAD
+
 .nombre-usuario {
   margin-right: 10px;
   color: white;
@@ -360,7 +353,6 @@ body {
   font-size: 18px;
   display: inline-block;
   vertical-align: middle;
-=======
 
 /* Media Queries for Responsiveness */
 @media (max-width: 992px) {
@@ -525,5 +517,6 @@ body {
     .grid-servicios {
         grid-template-columns: 1fr; /* Una columna en móviles */
     }
->>>>>>> Andrey
+
+}
 }

@@ -100,8 +100,13 @@ const Login = () => {
         const cedula = payload.sub || payload.identity;
         localStorage.setItem("cedula", cedula);
         localStorage.setItem("rol", rol); // Guardamos el nombre del rol
-
-        navigate("/home");
+        if(rol == "Contratista"){
+          navigate("/homecontratista");
+        }
+        else{
+          navigate("/home")
+        }
+        
       } else {
         alert(`Error al iniciar sesión: ${data.mensaje}`);
       }
