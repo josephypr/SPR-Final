@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/homePrestador.css";
+import "../../styles/homePrestador.css"; // Asegúrate de que esta ruta sea correcta
 import logo from "../../assets/logo.png";
-import whatsappIcon from "../../assets/whatsapp.png";
+import whatsappIcon from "../../assets/whatsapp.png"; // Asegúrate de que este ícono se use si lo descomentas
 import defaultPerfilIcon from "../../assets/perfil.png";
 
 const HomePrestador = () => {
@@ -58,25 +58,32 @@ const HomePrestador = () => {
         localStorage.clear();
         window.location.href = "/";
     };
-    const handleIrPerfil = () => navigate("/perfil");
+    const handleIrPerfil = () => navigate("/perfil"); // Esta ruta es para tu perfil general, si es distinto del portafolio
+
+    // *** URL CORREGIDA para PerfilPortafolio ***
+    const handleVerPerfilDesdePostulacion = () => {
+        navigate("/PerfilPortafolio"); // <--- ¡URL CORREGIDA: /PerfilPortafolio (P mayúscula, sin guion) !
+        setShowPostulacion(false); // Opcional: Cerrar el recuadro de postulación al ir al perfil
+    };
 
     return (
         <div className="home">
             {/* Header */}
             <header className="header">
-                <img src={logo} alt="Logo" className="logo" 
-                     onClick={() => navigate("/home")} style={{ cursor: "pointer" }} />
-                
+                <img src={logo} alt="Logo" className="logo"
+                    onClick={() => navigate("/home")} // <--- ¡CAMBIADO! Ahora el logo lleva a /home
+                    style={{ cursor: "pointer" }} />
+
                 <div className="usuario" onClick={handlePerfilClick}>
                     <span className="nombre-usuario">
                         {prestadorInfo ? `${prestadorInfo.nombres} ${prestadorInfo.apellidos}` : "Cargando..."}
                     </span>
-                    <img src={prestadorInfo?.foto || defaultPerfilIcon} 
-                         alt="Perfil" className="perfil-icono" />
-                    
+                    <img src={prestadorInfo?.foto || defaultPerfilIcon}
+                            alt="Perfil" className="perfil-icono" />
+
                     {showMenu && (
                         <div className="menu-desplegable">
-                            <button onClick={handleIrPerfil}>Perfil</button>
+                            <button onClick={handleIrPerfil}>Mi Perfil</button>
                             <button onClick={handleCerrarSesion}>Cerrar sesión</button>
                         </div>
                     )}
@@ -87,18 +94,13 @@ const HomePrestador = () => {
             <main className="contenido">
                 {/* Sidebar */}
                 <aside className="sidebar">
-                    <h3>Categoría</h3>
-                    <ul>
-                        <li>Tecnología</li>
-                        {/* Agrega más categorías si es necesario */}
-                    </ul>
-
-                    <h3>Ordenar por</h3>
-                    <select>
-                        <option>Relevancia</option>
-                        <option>Estudios Universitarios</option>
-                        {/* Agrega más opciones de ordenamiento */}
-                    </select>
+                    <div className="sidebar-category-section">
+                        <h3>Categoría</h3>
+                        <ul>
+                            <li>Tecnología</li>
+                            {/* Agrega más categorías si es necesario */}
+                        </ul>
+                    </div>
                 </aside>
 
                 {/* Sección de servicios */}
@@ -111,24 +113,32 @@ const HomePrestador = () => {
                         <div className="mini-perfil">
                             {prestadorInfo ? (
                                 <>
-                                    <img src={prestadorInfo.foto || defaultPerfilIcon} 
-                                         alt="Mi perfil" className="perfil-icono-grande" />
+                                    <img src={prestadorInfo.foto || defaultPerfilIcon}
+                                            alt="Mi perfil" className="perfil-icono-grande" />
                                     <h4>{prestadorInfo.nombres} {prestadorInfo.apellidos}</h4>
                                     <p>{prestadorInfo.descripcion || "No hay descripción disponible"}</p>
-                                    
+
+                                    {/* Botón "Ver perfil" modificado */}
+                                    <button
+                                        className="btn-ver-perfil"
+                                        onClick={handleVerPerfilDesdePostulacion} 
+                                    >
+                                        Ver perfil
+                                    </button>
+
                                     {prestadorInfo.celular && (
-                                        <a href={`https://wa.me/${prestadorInfo.celular}`} 
-                                           target="_blank" rel="noopener noreferrer"
-                                           className="whatsapp-link">
-                                            <img src={whatsappIcon} alt="WhatsApp" className="whatsapp-icono" />
+                                        <a href={`https://wa.me/${prestadorInfo.celular}`}
+                                            target="_blank" rel="noopener noreferrer"
+                                            className="whatsapp-link">
+                                            {/* <img src={whatsappIcon} alt="WhatsApp" className="whatsapp-icono" />*/}
                                             Contactar por WhatsApp
                                         </a>
                                     )}
+                                    <button className="btn-eliminar-postulacion" onClick={() => setShowPostulacion(false)}>Eliminar postulación</button>
                                 </>
                             ) : (
                                 <p>Cargando información...</p>
                             )}
-                            <button onClick={() => setShowPostulacion(false)}>Eliminar postulación</button>
                         </div>
                     )}
                 </section>

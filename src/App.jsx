@@ -14,6 +14,7 @@ import PerfilPrestador from './feature/auth/perfilPrestador';
 import Perfil from './feature/auth/perfil';
 import ProtectedRoute from './feature/auth/ProtectedRoute';
 import Portafolioprestador from './feature/servicios/portafolioprestador';
+import PerfilPortafolio from './feature/auth/PerfilPortafolio';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/RegistroPrestador" element={<RegistroPrestador />} />
         <Route path="/Perfil" element={<Perfil />} />
         <Route path="/Prestador" element={<PerfilPrestador/>} />
+        <Route path="/PerfilPortafolio" element={<PerfilPortafolio/>} />
         
 
         

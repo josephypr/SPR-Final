@@ -1,52 +1,81 @@
 .portafolio-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+  background: #fdfcfe;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2, h3 {
+  text-align: center;
+  color: #5a189a;
+}
+
+form {
+  margin-bottom: 2rem;
 }
 
 .servicio-item {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #8a2be8;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f3e8ff;
+  border-left: 5px solid #9d4edd;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid #d0bfff;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+  background-color: #ffffff;
+  box-sizing: border-box; /* AÑADIDO: Para incluir padding y border en el ancho */
+}
+
+input[type="file"] {
+  width: 100%; /* AÑADIDO: Asegura que el input ocupe el 100% del ancho */
+  padding: 12px; /* AÑADIDO: Consistencia de padding con el textarea */
+  border: 1px solid #d0bfff; /* AÑADIDO: Consistencia de borde con el textarea */
+  border-radius: 8px; /* AÑADIDO: Consistencia de border-radius con el textarea */
+  margin-bottom: 1rem;
+  font-size: 14px;
+  box-sizing: border-box; /* AÑADIDO: Para incluir padding y border en el ancho */
 }
 
 .btn-agregar, .btn-guardar {
-  background-color: #8a2be8;
+  display: inline-block;
+  background-color: #7b2cbf;
   color: white;
   border: none;
-  padding: 10px 15px;
-  margin: 10px 5px;
-  border-radius: 5px;
+  padding: 12px 20px;
+  margin: 10px 5px 0 0;
+  border-radius: 30px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
 }
 
-.btn-eliminar-porta {
-  background-color: #ff4444;
+.btn-agregar:hover, .btn-guardar:hover {
+  background-color: #5a189a;
+}
+
+.btn-eliminar {
+  align-self: flex-end;
+  background-color: #ff4d6d;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 8px 12px;
+  border-radius: 50px;
+  font-size: 12px;
   cursor: pointer;
-}
-
-
-/* Portafolio.css */
-.portafolio-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-}
-
-.servicio-item {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .portafolios-guardados {
@@ -56,17 +85,16 @@
 .portafolios-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  gap: 25px;
 }
 
 .portafolio-item {
-  position: relative;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  position: relative;
 }
 
 .portafolio-item:hover {
@@ -77,55 +105,28 @@
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-bottom: 1px solid #eee;
 }
 
 .portafolio-descripcion {
-  padding: 15px;
-  font-size: 14px;
-  color: #333;
+  padding: 1rem;
+  font-size: 15px;
+  color: #444;
   min-height: 80px;
 }
 
-.btn-eliminar {
+.btn-eliminar-porta {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(244, 67, 54, 0.8);
+  background: #ff4d4d;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-}
-
-.btn-agregar, .btn-guardar {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-  transition: background 0.3s;
-}
-
-.btn-agregar:hover, .btn-guardar:hover {
-  background: #45a049;
-}
-
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: vertical;
-  min-height: 100px;
-  margin-bottom: 10px;
 }

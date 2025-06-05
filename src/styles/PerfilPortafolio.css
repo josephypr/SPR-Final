@@ -1,0 +1,125 @@
+/* PerfilPortafolio.css */
+
+.perfil-portafolio-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Centra el contenedor y le da margen */
+    max-width: 900px; /* Limita el ancho para una mejor lectura */
+    text-align: center;
+}
+
+.perfil-portafolio-container h2 {
+    color: #5A0086; /* Tu color púrpura */
+    margin-bottom: 25px;
+    font-size: 2.2em;
+    border-bottom: 2px solid #5A0086;
+    padding-bottom: 10px;
+    display: inline-block; /* Para que la línea se ajuste al texto */
+}
+
+.portfolio-grid {
+    display: grid;
+    /* Crea columnas responsivas: mínimo 250px, se ajustan automáticamente */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px; /* Espacio entre las imágenes */
+    justify-content: center; /* Centra la cuadrícula si no llena todo el ancho */
+    align-items: stretch; /* Estira los ítems para que tengan la misma altura si es necesario */
+}
+
+.portfolio-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Asegura que la imagen no se desborde */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 15px; /* Espacio debajo de la imagen/descripción */
+    text-align: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.portfolio-image {
+    width: 100%;
+    height: 220px; /* Altura fija para uniformidad de las imágenes */
+    object-fit: cover; /* Recorta la imagen para que cubra el área sin distorsionarse */
+    border-bottom: 1px solid #eee; /* Separador sutil */
+    margin-bottom: 10px;
+}
+
+.portfolio-description {
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.4;
+    padding: 0 15px;
+    max-height: 80px; /* Limita la altura de la descripción si existe */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es muy largo */
+    margin-bottom: 0; /* Elimina margen inferior extra */
+}
+
+.no-images-message {
+    color: #888;
+    font-style: italic;
+    margin-top: 30px;
+    font-size: 1.1em;
+    padding: 20px;
+    background-color: #ffe;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .perfil-portafolio-container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .perfil-portafolio-container h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .portfolio-image {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        gap: 10px;
+    }
+
+    .perfil-portafolio-container {
+        padding: 10px;
+        margin: 10px auto;
+    }
+
+    .perfil-portafolio-container h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    .portfolio-image {
+        height: 150px;
+    }
+
+    .portfolio-item {
+        padding-bottom: 10px;
+    }
+}
