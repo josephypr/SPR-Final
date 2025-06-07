@@ -1,78 +1,248 @@
+/* Asegura que padding y border se incluyan en el width y height */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 body {
-  background-color: #5A0086;
+    background-color: #5A0086;
 }
 .perfil-imagen {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* Hace que sea redonda */
-  object-fit: cover;  /* Asegura que la imagen se recorte bien si es rectangular */
-  border: 3px solid #ccc; /* Borde gris claro */
-  margin: 0 auto 1rem auto; /* Centrada y con margen inferior */
-  display: block;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  transition: transform 0.3s ease; /* Efecto suave al pasar el mouse */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccc;
+    margin: 0 auto 1rem auto;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .perfil-imagen:hover {
-  transform: scale(1.05); /* Hace un ligero zoom al pasar el mouse */
+    transform: scale(1.05);
 }
 
 .perfil-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .perfil-titulo {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #4a2c97;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #4a2c97;
 }
 
 .perfil-form .perfil-group {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .perfil-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #333;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
 }
 
-.perfil-input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
+.perfil-input,
+.perfil-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
 }
+
+.perfil-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
 
 .perfil-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
+    display: flex;
+    flex-direction: column; /* Apila las filas de botones verticalmente */
+    gap: 0.8rem; /* Espacio entre las filas */
+    margin-top: 1.5rem;
+    /* justify-content y align-items ya no se necesitan aquí para los elementos individuales,
+       sino para los contenedores de fila */
 }
 
+/* Nuevas clases para las filas de botones */
+.perfil-buttons-top-row,
+.perfil-buttons-bottom-row {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los botones se envuelvan si el espacio es limitado */
+    justify-content: center; /* Centrar los botones dentro de cada fila */
+    gap: 0.8rem; /* Espacio entre los botones dentro de la misma fila */
+    width: 100%; /* Asegura que cada fila ocupe todo el ancho disponible */
+}
+
+/* CLASE BASE PARA TODOS LOS BOTONES - AJUSTADA */
+.perfil-button {
+    padding: 0.75rem 1.25rem !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
+    
+    min-width: 120px !important;
+    height: 45px !important;
+    
+    text-align: center !important;
+    box-sizing: border-box !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+.perfil-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Estilos específicos de color para cada botón */
+.btn-editar {
+    background-color: #5A0086 !important; /* Morado*/
+    color: #fff !important;
+}
+
+.btn-guardar {
+    background-color: #5A0086 !important; /* Verde*/
+    color: #fff !important;
+}
+
+.btn-cancelar {
+    background-color: #5A0086 !important; /* Gris*/
+    color: #fff !important;
+}
 
 .btn-volver {
-  background-color: #6c757d;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-left: 10px;
+    background-color: #5A0086 !important; /* Azul*/
+    color: white !important;
 }
 
-.btn-volver:hover {
-  background-color: #5a6268;
+.boton-eliminar {
+    background-color: #dc3545 !important; /* Rojo*/
+    color: #fff !important;
+}
+
+/* Estilos para la sección de calificación */
+.rating-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 0.8rem;
+    background-color: #f9f9f9;
+}
+
+.rating-section h3 {
+    text-align: center;
+    color: #4a2c97;
+    margin-bottom: 0.8rem;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stars-container {
+    display: flex;
+    font-size: 1.5rem;
+    color: #ffd700;
+}
+
+.star {
+    margin: 0 1px;
+    cursor: default;
+    color: #ccc; /* Estrellas no rellenadas */
+}
+
+.star.filled {
+    color: #ffd700; /* Estrellas rellenadas */
+}
+
+.star.half {
+    background: linear-gradient(to right, #ffd700 50%, #ccc 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #ffd700; /* Fallback */
 }
 
 
-.btn-editar { background: #4a2c97; color: #fff; }
-.btn-guardar { background: #28a745; color: #fff; }
-.btn-cancelar { background: #6c757d; color: #fff; }
-.boton-eliminar { background: #dc3545; color: #fff; }
+.rating-value {
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: bold;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+.rating-details h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #4a2c97;
+    text-align: center;
+}
+
+.reviews-list {
+    list-style: none;
+    padding: 0;
+}
+
+.review-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.review-comment {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+/* Estilos para el input de archivo de imagen */
+.perfil-input-file {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.perfil-input-file:hover {
+    background-color: #e0e0e0;
+}

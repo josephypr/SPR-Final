@@ -14,7 +14,7 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const limites = {
-    correo: { min: 6, max: 30 }, // Corregido: min 6, max 10
+    correo: { min: 6, max: 30 },
     contrasena: { min: 6, max: 30 },
   };
 
@@ -62,8 +62,7 @@ const Login = () => {
     setTouched(newTouched);
     setError(errorMensaje);
 
-
-    const { rol, correo, contrasena } = form;
+    const { rol, correo, contrasena } = form; // rol ya viene en minúsculas del select
 
     if (!rol) {
       alert('Por favor selecciona un rol');
@@ -74,20 +73,20 @@ const Login = () => {
       return;
     }
 
-    // Convertir nombre de rol a ID
+    // Convertir nombre de rol a ID (el rol ya está en minúsculas por el value del select)
     const rolMap = {
       'contratista': 1,
       'prestador': 2
     };
-    const rol_id = rolMap[rol.toLowerCase()];
+    const rol_id = rolMap[rol]; // Usa 'rol' directamente, ya que viene en minúsculas
 
-    const url = 'http://localhost:5000/login';
+    const url = 'http://localhost:5000/login'; // Asegúrate de que esta URL sea la correcta
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena, rol: rol_id }) // <- ahora se envía rol_id
+        body: JSON.stringify({ correo, contrasena, rol: rol_id })
       });
 
       const data = await response.json();
@@ -97,14 +96,18 @@ const Login = () => {
 
         localStorage.setItem("token", token);
         const payload = JSON.parse(atob(token.split('.')[1]));
-        const cedula = payload.sub || payload.identity;
+        const cedula = payload.sub || payload.identity; // Usa 'sub' o 'identity' según cómo esté tu JWT
         localStorage.setItem("cedula", cedula);
-        localStorage.setItem("rol", rol); // Guardamos el nombre del rol
-        if(rol == "Contratista"){
-          navigate("/homecontratista");
-        }
-        else{
-          navigate("/home")
+        localStorage.setItem("rol", rol); // Guardamos el nombre del rol (en minúsculas)
+
+        // AQUI ES DONDE AJUSTAMOS LA REDIRECCIÓN
+        if (rol === "contratista") { // Comparar con 'contratista' en minúsculas
+          navigate("/homeContratista");
+        } else if (rol === "prestador") { // Comparar con 'prestador' en minúsculas
+          navigate("/homePrestador");
+        } else {
+            // Esto es un fallback, por si acaso, aunque no debería pasar si el select funciona bien
+          navigate("/"); 
         }
         
       } else {
@@ -131,8 +134,8 @@ const Login = () => {
             required
           >
             <option value="">Seleccionar rol</option>
-            <option value="contratista">Contratista</option>
-            <option value="prestador">Prestador</option>
+            <option value="contratista">Contratista</option> {/* Los valores aquí son en minúsculas */}
+            <option value="prestador">Prestador</option> {/* Los valores aquí son en minúsculas */}
           </select>
 
           <input
@@ -144,9 +147,8 @@ const Login = () => {
             placeholder="Correo electrónico"
             className="login-input"
             required
-            maxLength={limites.correo.max} // Añadido maxLength
+            maxLength={limites.correo.max}
           />
-
 
           <input
             type="password"
@@ -157,7 +159,7 @@ const Login = () => {
             placeholder="Contraseña"
             className="login-input"
             required
-            maxLength={limites.contrasena.max} // Añadido maxLength
+            maxLength={limites.contrasena.max}
           />
           {error && <p className="error-message">{error}</p>}
 

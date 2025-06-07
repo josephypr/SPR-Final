@@ -1,0 +1,470 @@
+/* homePrestador.css */
+
+/* Estilos Generales del Contenedor Principal */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+}
+
+.home {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5A0086; /* Tu color púrpura oscuro */
+    padding: 5px 30px;
+    color: white;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    max-height: 100px;
+    max-width: 100%;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.usuario {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.nombre-usuario {
+    margin-right: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.perfil-icono {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+.menu-desplegable {
+    position: absolute;
+    top: 70px;
+    right: 30px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.menu-desplegable button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    color: #5A0086;
+    font-size: 1em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu-desplegable button:hover {
+    background-color: #f0f0f0;
+    color: #5A0086;
+}
+
+/* Contenido Principal (Main) */
+.contenido {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar - Ajustes CLAVE para el espaciado */
+.sidebar {
+    width: 240px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #5A0086;
+    font-size: 1.4em;
+    border-bottom: 2px solid #5A0086;
+    padding-bottom: 5px;
+    line-height: 1.2;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0px;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.sidebar li {
+    margin: 0;
+    padding: 3px 0;
+    color: #555;
+    font-size: 1.05em;
+    cursor: default;
+    transition: none;
+    font-weight: normal;
+}
+
+.sidebar li:hover {
+    /* No hay cambios al pasar el mouse para color o negrita */
+}
+
+/* Otros estilos para select y range, aunque no estén directamente en tu JSX del sidebar */
+.sidebar select,
+.sidebar input[type="range"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+}
+
+.portafolio-btn { /* Este botón no está en tu JSX actual, pero lo mantengo por si acaso */
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #5A0086;
+    color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.portafolio-btn:hover {
+    background-color: #8a2be8;
+    color: white;
+    border-color: #8a2be8;
+}
+
+.postular-btn {
+    padding: 15px 25px;
+    background-color: #5A0086; /* Unificando el color con el header principal */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin-left: 0;
+    margin-right: 0;
+    box-shadow: 0 4px 8px rgba(90, 0, 134, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.postular-btn:hover {
+    background-color: #45006b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(90, 0, 134, 0.3);
+}
+
+/* Estilos para el recuadro de información (mini-perfil) */
+.mini-perfil {
+    margin-top: 15px;
+    padding: 25px;
+    border: 2px solid #5A0086; /* Unificando el color con el header principal */
+    border-radius: 12px;
+    background-color: #f3e5ff; /* Tu púrpura muy claro */
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mini-perfil img.perfil-icono-grande {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #5A0086;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mini-perfil h4 {
+    text-align: center;
+    margin-bottom: 5px;
+    color: #5A0086;
+    font-size: 1.6em;
+}
+
+.mini-perfil p {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 1em;
+    line-height: 1.5;
+    max-height: 120px;
+    overflow: auto;
+}
+
+/* === MODIFICACIÓN CLAVE AQUÍ === */
+/* Estilos comunes para los botones dentro de mini-perfil */
+.mini-perfil .btn-ver-perfil,
+.mini-perfil .whatsapp-link,
+.mini-perfil .btn-eliminar-postulacion { /* Usamos la nueva clase */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em; /* Aseguramos la fuente para evitar desajustes por texto */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    width: 80%; /* Ancho uniforme */
+    max-width: 200px; /* Ancho máximo uniforme */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra uniforme */
+    text-align: center;
+    display: flex; /* Para centrar el contenido horizontal y verticalmente */
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio para el ícono de WhatsApp si se usa */
+    text-decoration: none; /* Para el enlace de WhatsApp */
+    font-weight: bold; /* Para el enlace de WhatsApp */
+    box-sizing: border-box; /* Asegura que el padding no añada al ancho total */
+}
+
+/* ESTILOS ESPECÍFICOS POR BOTÓN (solo color y hover) */
+
+/* Botón "Ver Perfil" */
+.mini-perfil .btn-ver-perfil {
+  background-color: #5A0086; /* Color que solicitaste */
+  color: white;
+}
+
+.mini-perfil .btn-ver-perfil:hover {
+  background-color: #45006b; /* Tono más oscuro al pasar el mouse */
+  transform: translateY(-1px);
+}
+
+/* Enlace/Botón "Contactar por WhatsApp" */
+.whatsapp-link {
+    background-color: #25D366; /* Verde de WhatsApp */
+    color: #fff;
+}
+
+.whatsapp-link:hover {
+    background-color: #1DA851;
+    transform: translateY(-1px);
+}
+
+/* Botón "Eliminar postulación" */
+.mini-perfil .btn-eliminar-postulacion { /* Usamos la nueva clase aquí */
+    background-color: #dc3545; /* Rojo para eliminar */
+    color: white;
+}
+
+.mini-perfil .btn-eliminar-postulacion:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.whatsapp-icono {
+    width: 28px;
+    height: 28px;
+    /* Si el icono de WhatsApp no se muestra, revisa tu JSX, ya que está comentado */
+}
+
+/* Sección de servicios (contenedora de "Postular servicio" y "mini-perfil") */
+.seccion-servicios {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+
+/* Media Queries para Responsividad - Adaptado del otro archivo */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+        padding: 20px;
+    }
+    .header {
+        padding: 10px 25px;
+    }
+    .logo {
+        max-height: 80px;
+    }
+    .perfil-icono {
+        height: 50px;
+        width: 50px;
+    }
+    .nombre-usuario {
+        font-size: 16px;
+    }
+    .menu-desplegable {
+        top: 60px;
+        right: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 15px;
+    }
+    .logo {
+        max-height: 60px;
+    }
+    .perfil-icono {
+        height: 40px;
+        width: 40px;
+    }
+    .nombre-usuario {
+        display: none;
+    }
+    .menu-desplegable {
+        top: 55px;
+        right: 15px;
+    }
+
+    .contenido {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-bottom: 1px solid #eee;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-right: none;
+        padding: 15px;
+    }
+
+    .seccion-servicios {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .postular-btn {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .mini-perfil {
+        width: 95%;
+        max-width: none;
+        padding: 20px;
+    }
+
+    .mini-perfil img.perfil-icono-grande {
+        width: 100px;
+        height: 100px;
+    }
+    /* Aseguramos que los botones sigan el mismo estilo en móviles */
+    .whatsapp-link,
+    .mini-perfil .btn-ver-perfil,
+    .mini-perfil .btn-eliminar-postulacion { /* Usamos la nueva clase aquí */
+        width: 90%; /* Ajuste para móviles para que ocupen más espacio */
+        min-width: unset;
+        max-width: none; /* Elimina el max-width en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 8px 10px;
+    }
+    .logo {
+        max-height: 50px;
+    }
+    .perfil-icono {
+        height: 35px;
+        width: 35px;
+    }
+    .menu-desplegable {
+        top: 45px;
+        right: 10px;
+        min-width: 120px;
+    }
+    .menu-desplegable button {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .sidebar {
+        padding: 10px;
+    }
+    .sidebar h3 {
+        font-size: 1.2em;
+        padding-bottom: 5px;
+    }
+    .sidebar li {
+        font-size: 0.9em;
+    }
+    .sidebar select,
+    .sidebar input[type="range"] {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    .seccion-servicios {
+        padding: 10px;
+    }
+
+    .mini-perfil {
+        padding: 15px;
+        gap: 10px;
+    }
+    .mini-perfil img.perfil-icono-grande {
+        width: 80px;
+        height: 80px;
+        border-width: 3px;
+    }
+    .mini-perfil h4 {
+        font-size: 1.4em;
+    }
+    .mini-perfil p {
+        font-size: 0.9em;
+    }
+    /* Ajustes específicos para botones en pantallas más pequeñas */
+    .whatsapp-link,
+    .mini-perfil .btn-ver-perfil,
+    .mini-perfil .btn-eliminar-postulacion { /* Usamos la nueva clase aquí */
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+    .whatsapp-icono {
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/perfil.css";
 
-
 const CLOUDINARY_CLOUD_NAME = "dymxlvysw"; 
-const CLOUDINARY_UPLOAD_PRESET = "mi_perfil_unsigned"; // 
+const CLOUDINARY_UPLOAD_PRESET = "mi_perfil_unsigned"; 
 
 const PerfilContratista = () => {
     const navigate = useNavigate();
@@ -16,7 +15,6 @@ const PerfilContratista = () => {
     const [usuario, setUsuario] = useState(null);
     const [original, setOriginal] = useState(null);
     const [editing, setEditing] = useState(false);
-    // **2. Nuevo estado para el archivo de imagen seleccionado**
     const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [rating, setRating] = useState({
         promedio: 0,
@@ -77,16 +75,14 @@ const PerfilContratista = () => {
         setUsuario(prev => ({ ...prev, [name]: value }));
     };
 
-    // **3. Nueva función para manejar la selección del archivo de imagen**
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedImageFile(e.target.files[0]);
         } else {
-            setSelectedImageFile(null); // Si el usuario cancela la selección
+            setSelectedImageFile(null);
         }
     };
 
-    // **4. Función para subir la imagen a Cloudinary desde el frontend**
     const uploadImageToCloudinary = async (file) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -102,7 +98,7 @@ const PerfilContratista = () => {
             );
             const data = await response.json();
             if (response.ok) {
-                return data.secure_url; // Retorna la URL segura de Cloudinary
+                return data.secure_url;
             } else {
                 console.error("Error al subir la imagen a Cloudinary:", data);
                 throw new Error(data.error.message || "Error al subir la imagen.");
@@ -114,39 +110,33 @@ const PerfilContratista = () => {
     };
     
     const handleGuardar = async () => {
-        let photoUrl = usuario.foto; // Mantén la foto actual por defecto
+        let photoUrl = usuario.foto;
 
-        // **5. Lógica para subir la nueva imagen si se seleccionó una**
         if (selectedImageFile) {
             try {
                 photoUrl = await uploadImageToCloudinary(selectedImageFile);
                 console.log("Nueva imagen subida a Cloudinary:", photoUrl);
             } catch (error) {
                 alert("Error al subir la nueva imagen. Inténtalo de nuevo.");
-                return; // Detiene la función si falla la subida de la imagen
+                return;
             }
         } else if (usuario.foto === null) {
-            // Si el usuario borró la foto (por ejemplo, con un botón de 'eliminar foto'
-            // que aún no existe, o si el input file se vacía), podrías enviar null.
-            // Para este ejemplo, si no hay archivo nuevo, simplemente se mantiene la foto existente.
-            // Si quieres permitir borrar, podrías tener un botón específico para ello.
-            // Para el propósito actual, si no hay 'selectedImageFile', se mantiene 'usuario.foto'
-            // que fue inicializado como la foto actual.
+            // Lógica si se quiere eliminar la foto, si no hay un botón específico, esto no se activará fácilmente
         }
 
         const datosParaEnviar = {
-            ...usuario, // Copia todos los campos del estado 'usuario'
-            foto: photoUrl // Sobrescribe 'foto' con la nueva URL o la existente
+            ...usuario,
+            foto: photoUrl
         };
 
         try {
             const res = await fetch(endpoint, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json", // ¡Importante! Enviar como JSON
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(datosParaEnviar) // Convertir el objeto a JSON
+                body: JSON.stringify(datosParaEnviar)
             });
 
             if (!res.ok) {
@@ -154,11 +144,10 @@ const PerfilContratista = () => {
                 throw new Error(errorData.mensaje || "Error al guardar");
             }
             alert("Datos actualizados");
-            // Actualiza el estado 'usuario' y 'original' con la nueva foto para que se refleje
             setUsuario(datosParaEnviar);
             setOriginal(datosParaEnviar);
             setEditing(false);
-            setSelectedImageFile(null); // Limpia el archivo seleccionado después de guardar
+            setSelectedImageFile(null);
         } catch (err) {
             console.error(err);
             alert("No fue posible guardar los cambios: " + err.message);
@@ -185,7 +174,7 @@ const PerfilContratista = () => {
     const handleCancelar = () => {
         setUsuario(original);
         setEditing(false);
-        setSelectedImageFile(null); // También limpia el archivo seleccionado al cancelar
+        setSelectedImageFile(null);
     };
 
     const renderStars = (ratingValue) => {
@@ -216,7 +205,6 @@ const PerfilContratista = () => {
                     className="perfil-imagen"
                 />
 
-                {/* **6. Input para seleccionar la nueva foto, visible solo en modo edición** */}
                 {editing && (
                     <div className="perfil-group">
                         <label htmlFor="fotoPerfil">Cambiar Foto de Perfil</label>
@@ -230,7 +218,6 @@ const PerfilContratista = () => {
                     </div>
                 )}
 
-                {/* Sección de calificación (sin cambios) */}
                 <div className="rating-section">
                     <h3>Calificación</h3>
                     {rating.totalResenas > 0 ? (
@@ -264,12 +251,11 @@ const PerfilContratista = () => {
                     )}
                 </div>
 
-                {/* Resto de tus campos de perfil (sin cambios, solo se editan si editing es true) */}
                 <div className="perfil-group">
                     <label>Nombres</label>
                     <input
                         name="nombres"
-                        value={usuario.nombres}
+                        value={usuario.nombres || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -279,7 +265,7 @@ const PerfilContratista = () => {
                     <label>Apellidos</label>
                     <input
                         name="apellidos"
-                        value={usuario.apellidos}
+                        value={usuario.apellidos || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -289,7 +275,7 @@ const PerfilContratista = () => {
                     <label>Correo</label>
                     <input
                         name="correo"
-                        value={usuario.correo}
+                        value={usuario.correo || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -299,7 +285,7 @@ const PerfilContratista = () => {
                     <label>Celular</label>
                     <input
                         name="celular"
-                        value={usuario.celular}
+                        value={usuario.celular || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -309,7 +295,7 @@ const PerfilContratista = () => {
                     <label>Dirección</label>
                     <input
                         name="direccion"
-                        value={usuario.direccion}
+                        value={usuario.direccion || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -320,7 +306,7 @@ const PerfilContratista = () => {
                     <input
                         name="fecha_nacimiento"
                         type="date"
-                        value={usuario.fecha_nacimiento}
+                        value={usuario.fecha_nacimiento || ''}
                         onChange={handleChange}
                         disabled={!editing}
                         className="perfil-input"
@@ -328,28 +314,33 @@ const PerfilContratista = () => {
                 </div>
 
                 <div className="perfil-buttons">
-                    {!editing ? (
-                        <button type="button" className="btn btn-editar" onClick={() => setEditing(true)}>
-                            Editar
+                    {/* Contenedor para la fila superior de botones */}
+                    <div className="perfil-buttons-top-row">
+                        {editing ? (
+                            <>
+                                <button type="button" className="perfil-button btn-guardar" onClick={handleGuardar}>
+                                    Guardar
+                                </button>
+                                <button type="button" className="perfil-button btn-cancelar" onClick={handleCancelar}>
+                                    Cancelar
+                                </button>
+                            </>
+                        ) : (
+                            <button type="button" className="perfil-button btn-editar" onClick={() => setEditing(true)}>
+                                Editar
+                            </button>
+                        )}
+                        <button type="button" className="perfil-button btn-volver" onClick={() => navigate("/homeContratista")}>
+                            Volver al inicio
                         </button>
-                    ) : (
-                        <>
-                            <button type="button" className="btn btn-guardar" onClick={handleGuardar}>
-                                Guardar
-                            </button>
-                            <button type="button" className="btn btn-cancelar" onClick={handleCancelar}>
-                                Cancelar
-                            </button>
-                        </>
-                    )}
+                    </div>
 
-                    <button type="button" className="btn btn-volver" onClick={() => navigate("/home")}>
-                        Volver al inicio
-                    </button>
-
-                    <button type="button" className="btn boton-eliminar" onClick={handleEliminar}>
-                        Eliminar cuenta
-                    </button>
+                    {/* Contenedor para la fila inferior del botón de eliminar */}
+                    <div className="perfil-buttons-bottom-row">
+                        <button type="button" className="perfil-button boton-eliminar" onClick={handleEliminar}>
+                            Eliminar cuenta
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

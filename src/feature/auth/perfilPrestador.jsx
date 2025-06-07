@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/perfil.css";
 
-// **1. Configura tus credenciales de Cloudinary aquí**
-// Asegúrate de que CLOUDINARY_UPLOAD_PRESET sea el nombre de tu preset sin firmar
-const CLOUDINARY_CLOUD_NAME = "dymxlvysw"; // Este es tu Cloud Name (verificado en tu imagen)
-const CLOUDINARY_UPLOAD_PRESET = "mi_perfil_unsigned"; // <--- Usa el nombre exacto de tu preset "Unsigned"
+const CLOUDINARY_CLOUD_NAME = "dymxlvysw"; 
+const CLOUDINARY_UPLOAD_PRESET = "mi_perfil_unsigned";
 
 const PerfilPrestador = () => {
     const navigate = useNavigate();
     const cedula = localStorage.getItem("cedula");
     const token = localStorage.getItem("token");
-    const endpoint = `/api/prestador/${cedula}`;
+    const endpoint = `/api/prestador/${cedula}`; // Asegúrate de que esta URL coincida con tu backend
     const ratingEndpoint = `/api/prestador/${cedula}/calificaciones`;
 
     const [usuario, setUsuario] = useState(null);
     const [original, setOriginal] = useState(null);
     const [editing, setEditing] = useState(false);
-    // **2. Nuevo estado para el archivo de imagen seleccionado**
+
     const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [rating, setRating] = useState({
         promedio: 0,
@@ -78,16 +76,14 @@ const PerfilPrestador = () => {
         setUsuario(prev => ({ ...prev, [name]: value }));
     };
 
-    // **3. Nueva función para manejar la selección del archivo de imagen**
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedImageFile(e.target.files[0]);
         } else {
-            setSelectedImageFile(null); // Si el usuario cancela la selección
+            setSelectedImageFile(null);
         }
     };
 
-    // **4. Función para subir la imagen a Cloudinary desde el frontend**
     const uploadImageToCloudinary = async (file) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -103,7 +99,7 @@ const PerfilPrestador = () => {
             );
             const data = await response.json();
             if (response.ok) {
-                return data.secure_url; // Retorna la URL segura de Cloudinary
+                return data.secure_url;
             } else {
                 console.error("Error al subir la imagen a Cloudinary:", data);
                 throw new Error(data.error.message || "Error al subir la imagen.");
@@ -115,39 +111,35 @@ const PerfilPrestador = () => {
     };
 
     const handleGuardar = async () => {
-        let photoUrl = usuario.foto; // Mantén la foto actual por defecto
+        let photoUrl = usuario.foto;
 
-        // **5. Lógica para subir la nueva imagen si se seleccionó una**
         if (selectedImageFile) {
             try {
                 photoUrl = await uploadImageToCloudinary(selectedImageFile);
                 console.log("Nueva imagen subida a Cloudinary:", photoUrl);
             } catch (error) {
                 alert("Error al subir la nueva imagen. Inténtalo de nuevo.");
-                return; // Detiene la función si falla la subida de la imagen
+                return;
             }
         } else if (usuario.foto === null) {
-            // Si el usuario borró la foto (por ejemplo, con un botón de 'eliminar foto'
-            // que aún no existe, o si el input file se vacía), podrías enviar null.
-            // Para este ejemplo, si no hay archivo nuevo, simplemente se mantiene la foto existente.
+            // Lógica si se quiere eliminar la foto, si no hay un botón específico, esto no se activará fácilmente
         }
 
         const datosParaEnviar = {
-            ...usuario, 
-            foto: photoUrl, 
-            
-            titulos_uni: usuario.titulos_uni, // Asegúrate de que estén en el estado 'usuario'
-            descripcion: usuario.descripcion, // Asegúrate de que estén en el estado 'usuario'
+            ...usuario,
+            foto: photoUrl,
+            titulos_uni: usuario.titulos_uni,
+            descripcion: usuario.descripcion,
         };
 
         try {
             const res = await fetch(endpoint, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json", // ¡Importante! Enviar como JSON
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(datosParaEnviar) // Convertir el objeto a JSON
+                body: JSON.stringify(datosParaEnviar)
             });
 
             if (!res.ok) {
@@ -158,7 +150,7 @@ const PerfilPrestador = () => {
             setUsuario(datosParaEnviar);
             setOriginal(datosParaEnviar);
             setEditing(false);
-            setSelectedImageFile(null); // Limpia el archivo seleccionado después de guardar
+            setSelectedImageFile(null);
         } catch (err) {
             console.error(err);
             alert("No fue posible guardar los cambios: " + err.message);
@@ -185,7 +177,7 @@ const PerfilPrestador = () => {
     const handleCancelar = () => {
         setUsuario(original);
         setEditing(false);
-        setSelectedImageFile(null); // También limpia el archivo seleccionado al cancelar
+        setSelectedImageFile(null);
     };
 
     const renderStars = (ratingValue) => {
@@ -216,7 +208,6 @@ const PerfilPrestador = () => {
                     className="perfil-imagen"
                 />
 
-                {/* **6. Input para seleccionar la nueva foto, visible solo en modo edición** */}
                 {editing && (
                     <div className="perfil-group">
                         <label htmlFor="fotoPerfil">Cambiar Foto de Perfil</label>
@@ -230,7 +221,6 @@ const PerfilPrestador = () => {
                     </div>
                 )}
 
-                {/* Sección de calificación (sin cambios) */}
                 <div className="rating-section">
                     <h3>Calificación</h3>
                     {rating.totalResenas > 0 ? (
@@ -264,7 +254,6 @@ const PerfilPrestador = () => {
                     )}
                 </div>
 
-                {/* Campos de perfil específicos del Prestador */}
                 <div className="perfil-group">
                     <label>Nombres</label>
                     <input
@@ -326,7 +315,6 @@ const PerfilPrestador = () => {
                         className="perfil-input"
                     />
                 </div>
-                {/* Nuevos campos para Prestador */}
                 <div className="perfil-group">
                     <label>Títulos Universitarios</label>
                     <input
@@ -344,33 +332,38 @@ const PerfilPrestador = () => {
                         value={usuario.descripcion || ''}
                         onChange={handleChange}
                         disabled={!editing}
-                        className="perfil-textarea" // Puedes necesitar una clase CSS para textarea
+                        className="perfil-textarea"
                     ></textarea>
                 </div>
 
                 <div className="perfil-buttons">
-                    {!editing ? (
-                        <button type="button" className="btn btn-editar" onClick={() => setEditing(true)}>
-                            Editar
+                    {/* Contenedor para la fila superior de botones */}
+                    <div className="perfil-buttons-top-row">
+                        {editing ? (
+                            <>
+                                <button type="button" className="perfil-button btn-guardar" onClick={handleGuardar}>
+                                    Guardar
+                                </button>
+                                <button type="button" className="perfil-button btn-cancelar" onClick={handleCancelar}>
+                                    Cancelar
+                                </button>
+                            </>
+                        ) : (
+                            <button type="button" className="perfil-button btn-editar" onClick={() => setEditing(true)}>
+                                Editar
+                            </button>
+                        )}
+                        <button type="button" className="perfil-button btn-volver" onClick={() => navigate("/homePrestador")}>
+                            Volver al inicio
                         </button>
-                    ) : (
-                        <>
-                            <button type="button" className="btn btn-guardar" onClick={handleGuardar}>
-                                Guardar
-                            </button>
-                            <button type="button" className="btn btn-cancelar" onClick={handleCancelar}>
-                                Cancelar
-                            </button>
-                        </>
-                    )}
+                    </div>
 
-                    <button type="button" className="btn btn-volver" onClick={() => navigate("/home")}>
-                        Volver al inicio
-                    </button>
-
-                    <button type="button" className="btn boton-eliminar" onClick={handleEliminar}>
-                        Eliminar cuenta
-                    </button>
+                    {/* Contenedor para la fila inferior del botón de eliminar */}
+                    <div className="perfil-buttons-bottom-row">
+                        <button type="button" className="perfil-button boton-eliminar" onClick={handleEliminar}>
+                            Eliminar cuenta
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

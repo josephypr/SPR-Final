@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import "../../styles/Portafolio.css";
 import axios from "axios";
 
@@ -8,6 +9,7 @@ const Portafolioprestador = () => {
   const [forms, setForms] = useState([{ description: "", image: null }]);
   const [portafolios, setPortafolios] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   // Verificar token al cargar
   useEffect(() => {
@@ -127,8 +129,21 @@ const Portafolioprestador = () => {
     }
   };
 
+  // Nuevo handler para el botón "Volver"
+  const handleGoBack = () => {
+    navigate("/homePrestador"); // Redirige a la ruta /homePrestador
+  };
+
   return (
     <div className="portafolio-container">
+      {/* Botón Volver - Colocado al principio del contenedor para visibilidad */}
+      <button 
+        className="btn-volver" 
+        onClick={handleGoBack}
+      >
+        ← Volver
+      </button>
+
       <h2>Mi Portafolio de Servicios</h2>
 
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -153,7 +168,7 @@ const Portafolioprestador = () => {
                 onClick={() => handleRemoveForm(index)}
                 className="btn-eliminar"
               >
-                Eliminar
+                Eliminar este campo
               </button>
             )}
           </div>
@@ -178,7 +193,7 @@ const Portafolioprestador = () => {
             {portafolios.map((portafolio) => (
               <div key={portafolio.id_portafolio} className="portafolio-item">
                 <img
-                  src={portafolio.imagenes}  // URL directa de Cloudinary
+                  src={portafolio.imagenes}
                   alt="Servicio"
                   className="portafolio-imagen"
                 />
@@ -186,11 +201,11 @@ const Portafolioprestador = () => {
                   {portafolio.descripcion}
                 </p>
                 <button
-                  className="btn-eliminar-porta"
+                  className="btn-eliminar-publicado"
                   onClick={() => handleDeletePortafolio(portafolio.id_portafolio)}
                   disabled={isLoading}
                 >
-                  Eliminar
+                  Eliminar Publicación
                 </button>
               </div>
             ))}

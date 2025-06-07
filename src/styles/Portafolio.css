@@ -37,17 +37,17 @@ textarea {
   font-size: 14px;
   resize: vertical;
   background-color: #ffffff;
-  box-sizing: border-box; /* AÑADIDO: Para incluir padding y border en el ancho */
+  box-sizing: border-box;
 }
 
 input[type="file"] {
-  width: 100%; /* AÑADIDO: Asegura que el input ocupe el 100% del ancho */
-  padding: 12px; /* AÑADIDO: Consistencia de padding con el textarea */
-  border: 1px solid #d0bfff; /* AÑADIDO: Consistencia de borde con el textarea */
-  border-radius: 8px; /* AÑADIDO: Consistencia de border-radius con el textarea */
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d0bfff;
+  border-radius: 8px;
   margin-bottom: 1rem;
   font-size: 14px;
-  box-sizing: border-box; /* AÑADIDO: Para incluir padding y border en el ancho */
+  box-sizing: border-box;
 }
 
 .btn-agregar, .btn-guardar {
@@ -67,8 +67,8 @@ input[type="file"] {
   background-color: #5a189a;
 }
 
-.btn-eliminar {
-  align-self: flex-end;
+.btn-eliminar { /* Para el botón "Eliminar este campo" en el formulario de adición */
+  align-self: flex-end; /* Mantiene la posición a la derecha si no se desea que ocupe todo el ancho */
   background-color: #ff4d6d;
   color: white;
   border: none;
@@ -76,6 +76,7 @@ input[type="file"] {
   border-radius: 50px;
   font-size: 12px;
   cursor: pointer;
+  margin-top: 10px; /* Espacio superior */
 }
 
 .portafolios-guardados {
@@ -94,7 +95,10 @@ input[type="file"] {
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  position: relative;
+  position: relative; /* Mantener relative por si se necesita para otros elementos */
+  display: flex; /* Añadido: Para organizar mejor los elementos internos */
+  flex-direction: column; /* Añadido: Para apilar imagen, descripción y botón */
+  padding-bottom: 1rem; /* Añadido: Espacio en la parte inferior para el botón */
 }
 
 .portafolio-item:hover {
@@ -105,28 +109,54 @@ input[type="file"] {
   width: 100%;
   height: 180px;
   object-fit: cover;
+  margin-bottom: 0.5rem; /* Espacio entre imagen y descripción */
 }
 
 .portafolio-descripcion {
-  padding: 1rem;
+  padding: 0 1rem; /* Ajustado: Sin padding superior/inferior para el párrafo, solo lateral */
   font-size: 15px;
   color: #444;
-  min-height: 80px;
+  /* min-height: 80px; */ /* Eliminado: o ajustado si el botón hace que el contenido se desborde */
+  flex-grow: 1; /* Permite que la descripción ocupe el espacio disponible */
 }
 
-.btn-eliminar-porta {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+/* NUEVAS REGLAS PARA EL BOTÓN DE ELIMINAR PUBLICACIÓN */
+.btn-eliminar-publicado {
+  /* No necesita position: absolute; porque ya no está superpuesto */
   background: #ff4d4d;
   color: white;
   border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  border-radius: 8px; /* Cambiado a un borde más rectangular */
+  padding: 8px 12px; /* Ajuste de padding */
   font-size: 14px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  align-self: center; /* Centra el botón horizontalmente dentro del flex container */
+  margin-top: 1rem; /* Margen superior para separarlo de la descripción */
+  width: calc(100% - 2rem); /* Ocupa casi todo el ancho, dejando padding */
+  box-sizing: border-box; /* Incluye padding en el ancho */
+  transition: background 0.3s ease;
+}
+
+.btn-eliminar-publicado:hover {
+  background: #e60000; /* Color más oscuro al pasar el ratón */
+}
+
+/* NUEVAS REGLAS PARA EL BOTÓN "VOLVER" */
+.btn-volver {
+    background-color: #7b2cbf; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex; /* Para alinear el texto y la flecha si la pones */
+    align-items: center;
+    gap: 5px; /* Espacio entre el ícono y el texto */
+    margin-bottom: 20px; /* Espacio debajo del botón */
+    transition: background-color 0.3s ease;
+}
+
+.btn-volver:hover {
+    background-color: #5A0086; 
 }

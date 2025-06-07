@@ -6,8 +6,9 @@ import RegistroContratista from './feature/auth/RegistroContratista';
 import RegistroPrestador from './feature/auth/RegistroPrestador';
 import EscogerRol from './feature/auth/EscogerRol';
 import Index from './index';
-import Home from "./feature/home/home";
 import HomePrestador from "./feature/home/homePrestador";
+import HomePrestadorperfiles from "./feature/home/homePrestadorperfiles";
+import HomeContratistaperfiles from "./feature/home/homeContratistaperfiles";
 import PerfilContratista from './feature/auth/perfilcontratista';
 import Homecontratista from './feature/home/homeContratista'
 import PerfilPrestador from './feature/auth/perfilPrestador';
@@ -38,10 +39,10 @@ function App() {
 
          <Route path="/homecontratista" element={
           <ProtectedRoute element={< Homecontratista/>} />
-        } />
+        } /> 
 
-        <Route path="/home" element={
-          <ProtectedRoute element={< Home/>} />
+        <Route path="/homePrestador" element={
+          <ProtectedRoute element={< HomePrestador/>} />
         } />
 
         <Route 
@@ -50,8 +51,12 @@ function App() {
           />} 
           />
 
-        <Route path="/homePrestador" element={
-          <ProtectedRoute element={<HomePrestador />} />
+        <Route path="/homePrestadorperfiles" element={
+          <ProtectedRoute element={<HomePrestadorperfiles />} />
+        } />
+
+        <Route path="/homeContratistaperfiles" element={
+          <ProtectedRoute element={<HomeContratistaperfiles />} />
         } />
 
         <Route path="/perfilContratista" element={
