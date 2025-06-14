@@ -88,7 +88,7 @@ const Portafolioprestador = () => {
         }
       });
 
-      const response = await axios.post(`${API_URL}/portafolio`, formData, {
+      await axios.post(`${API_URL}/portafolio`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ const Portafolioprestador = () => {
     <div className="portafolio-container">
       {/* Botón Volver - Colocado al principio del contenedor para visibilidad */}
       <button 
-        className="btn-volver" 
+        className="btn2-volver" 
         onClick={handleGoBack}
       >
         ← Volver

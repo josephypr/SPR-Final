@@ -1,102 +1,136 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../../styles/homePrestadorperfiles.css"; // CSS específico para el prestador
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import "../../styles/homePrestadorPerfiles.css";
 import logo from "../../assets/logo.png";
 import defaultPerfilIcon from "../../assets/perfil.png";
 
-// Renombramos el componente a HomePrestadorPerfiles para ser más específico
 const HomePrestadorPerfiles = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [showPostulacion, setShowPostulacion] = useState(false); // Mantener para el botón "Postular servicio"
-  const [prestadorInfo, setPrestadorInfo] = useState(null); // Info del PRESTADOR logueado
-  const navigate = useNavigate();
+  const [currentUserInfo, setCurrentUserInfo] = useState(null);
+  const [listaPostulaciones, setListaPostulaciones] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Obtener credenciales del prestador logueado
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const selectedService = location.state;
   const cedula = localStorage.getItem("cedula");
   const token = localStorage.getItem("token");
-  const rol = localStorage.getItem("rol"); // Asumimos que aquí el rol es "prestador"
+  const rol = localStorage.getItem("rol");
 
-  // Endpoint para cargar la información del prestador
-  const prestadorEndpoint = `/api/prestador/${cedula}`;
+  const loadPageData = useCallback(async () => {
+    if (!selectedService) {
+      alert("Por favor, selecciona un servicio desde la página principal.");
+      const homeRoute = rol === 'prestador' ? '/homePrestador' : '/homeContratista';
+      navigate(homeRoute);
+      return;
+    }
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-  // Cargar datos del prestador para el encabezado
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Corregimos las rutas para que usen el proxy de Vite correctamente
+      const userApiEndpoint = rol === 'prestador' ? `/api/prestador/${cedula}` : `/api/contratista/${cedula}`;
+
+      const [userRes, postulacionesRes] = await Promise.all([
+        fetch(userApiEndpoint, { headers: { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache' } }),
+        fetch(`/api/postulaciones?categoria_id=${selectedService.selectedCategoriaId}`, { headers: { Authorization: `Bearer ${token}`, 'Cache-Control': 'no-cache' } })
+      ]);
+
+      if (!userRes.ok) throw new Error("No se pudo cargar tu información de perfil.");
+      const userData = await userRes.json();
+      setCurrentUserInfo(userData);
+
+      if (postulacionesRes.status === 404) {
+        setListaPostulaciones([]);
+      } else if (!postulacionesRes.ok) {
+        throw new Error("No se pudieron cargar las postulaciones del servicio.");
+      } else {
+        const postulacionesData = await postulacionesRes.json();
+        setListaPostulaciones(postulacionesData);
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error en la carga de datos:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [cedula, token, rol, navigate, selectedService]);
+
   useEffect(() => {
-    const fetchPrestadorInfo = async () => {
-      if (!cedula || !token || rol !== "prestador") { // Verificar que el rol sea "prestador"
-        console.error("Credenciales o rol incorrecto. Redirigiendo a login.");
-        localStorage.clear();
-        navigate("/login");
-        return;
-      }
+    loadPageData();
+  }, [loadPageData]);
 
-      try {
-        const res = await fetch(prestadorEndpoint, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+  const handleGuardarPostulacion = async () => {
+    if (!currentUserInfo?.descripcion) {
+      alert("Necesitas una descripción en tu perfil para poder postularte.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/postulaciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          descripcion: currentUserInfo.descripcion,
+          categoria_id: selectedService.selectedCategoriaId,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.mensaje || "Error al guardar la postulación.");
 
-        if (!res.ok) {
-          if (res.status === 401) {
-            alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
-            localStorage.clear();
-            navigate("/login");
-          } else {
-            const errorData = await res.json();
-            throw new Error(errorData.mensaje || "Error al obtener información del prestador.");
-          }
-        }
+      alert("¡Felicidades! Te has postulado exitosamente.");
+      loadPageData();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
-        const data = await res.json();
-        setPrestadorInfo(data);
-      } catch (err) {
-        console.error("Error al cargar la información del prestador:", err);
-        alert("Error al cargar tu perfil.");
-      }
-    };
+  const handleAnularPostulacion = async (idPostulacion) => {
+    if (!window.confirm("¿Estás seguro de que quieres anular esta postulación?")) return;
+    try {
+      const res = await fetch(`/api/postulacion/${idPostulacion}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.mensaje || "Error al anular la postulación.");
 
-    fetchPrestadorInfo();
-  }, [cedula, token, rol, prestadorEndpoint, navigate]);
+      alert(data.mensaje);
+      loadPageData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
-  // Handlers
   const handlePerfilClick = () => setShowMenu(!showMenu);
-  
-  const handleCerrarSesion = () => {
-    localStorage.clear();
-    window.location.href = "/";
-  };
+  const handleCerrarSesion = () => { localStorage.clear(); window.location.href = "/"; };
+  const handleIrPerfil = () => navigate(rol === 'prestador' ? "/perfilPrestador" : "/perfilContratista");
 
-  const handleIrPerfil = () => {
-    // Redirige al perfil del prestador
-    navigate("/perfilPrestador"); // Asumiendo que esta es la ruta para el perfil completo del prestador
-  };
+  // --- NUEVA FUNCIÓN PARA NAVEGAR AL PORTAFOLIO DE UN PRESTADOR ---
+  const handleVerPortafolio = (cedulaPrestador) => {
+  navigate(`/perfilPortafolio/${cedulaPrestador}`);
+};
 
-  // Esta función es para el botón "Ver perfil" dentro del recuadro de postulación
-  const handleVerPerfilDesdePostulacion = () => {
-    navigate("/PerfilPortafolio"); // Ruta para el portafolio específico del prestador
-    setShowPostulacion(false); 
-  };
+
+  if (loading) return <div className="loading-container">Cargando...</div>;
+  if (error) return <div className="error-container">Error: {error}</div>;
+
+  const yaPostulado = currentUserInfo && listaPostulaciones.some(p => p.prestador.cedula === currentUserInfo.cedula);
+  const miPostulacion = yaPostulado ? listaPostulaciones.find(p => p.prestador.cedula === currentUserInfo.cedula) : null;
 
   return (
     <div className="home">
-      {/* Header */}
       <header className="header">
-        <img
-          src={logo}
-          alt="Logo"
-          className="logo"
-          onClick={() => navigate("/homePrestador")} // Logo lleva al home del prestador
-          style={{ cursor: "pointer" }}
-        />
-
+        <img src={logo} alt="Logo" className="logo" onClick={() => navigate(rol === 'prestador' ? "/homePrestador" : "/homeContratista")} style={{ cursor: "pointer" }} />
         <div className="usuario" onClick={handlePerfilClick}>
-          <span className="nombre-usuario">
-            {prestadorInfo ? `${prestadorInfo.nombres} ${prestadorInfo.apellidos}` : "Cargando..."}
-          </span>
-          <img
-            src={prestadorInfo?.foto || defaultPerfilIcon}
-            alt="Perfil"
-            className="perfil-icono"
-          />
-
+          <span className="nombre-usuario">{currentUserInfo ? `${currentUserInfo.nombres} ${currentUserInfo.apellidos}` : ""}</span>
+          <img src={currentUserInfo?.foto || defaultPerfilIcon} alt="Perfil" className="perfil-icono" />
           {showMenu && (
             <div className="menu-desplegable">
               <button onClick={handleIrPerfil}>Mi Perfil</button>
@@ -106,56 +140,73 @@ const HomePrestadorPerfiles = () => {
         </div>
       </header>
 
-      {/* Contenido principal */}
       <main className="contenido">
-        {/* Sidebar */}
         <aside className="sidebar">
+          {/* SECCIÓN DE CATEGORÍA AHORA ESTÁ ARRIBA */}
           <div className="sidebar-category-section">
-            <h3>Categoría</h3>
-            <ul>
-              <li>Tecnología</li>
-              {/* Agrega más categorías si es necesario */}
-            </ul>
+            <h3>Servicio</h3>
+            <p className="servicio-seleccionado">{selectedService?.selectedCategoriaName || 'Ninguno'}</p>
           </div>
+
+          {/* BOTÓN btn-volver3 AHORA ESTÁ ABAJO */}
+          <button className="btn-volver3" onClick={() => navigate(rol === 'prestador' ? '/homePrestador' : '/homeContratista')}>&larr; Volver</button>
         </aside>
 
-        {/* Sección de servicios - CON BOTÓN "POSTULAR SERVICIO" */}
         <section className="seccion-servicios">
-          <button className="postular-btn" onClick={() => setShowPostulacion(true)}>
-            Postular servicio
-          </button>
+          <h2>Prestadores para {selectedService?.selectedCategoriaName}</h2>
 
-          {showPostulacion && (
-            <div className="mini-perfil">
-              {prestadorInfo ? (
-                <>
-                  <img src={prestadorInfo.foto || defaultPerfilIcon}
-                       alt="Mi perfil" className="perfil-icono-grande" />
-                  <h4>{prestadorInfo.nombres} {prestadorInfo.apellidos}</h4>
-                  <p>{prestadorInfo.descripcion || "No hay descripción disponible"}</p>
-
-                  <button
-                    className="btn-ver-perfil"
-                    onClick={handleVerPerfilDesdePostulacion} 
-                  >
-                    Ver perfil
-                  </button>
-
-                  {prestadorInfo.celular && (
-                    <a href={`https://wa.me/${prestadorInfo.celular}`}
-                       target="_blank" rel="noopener noreferrer"
-                       className="whatsapp-link">
-                      Contactar por WhatsApp
-                    </a>
-                  )}
-                  <button className="btn-eliminar-postulacion" onClick={() => setShowPostulacion(false)}>Eliminar postulación</button>
-                </>
-              ) : (
-                <p>Cargando información...</p>
-              )}
+          {rol === 'prestador' && !yaPostulado && (
+            <div className="caja-postulacion">
+              <h3>¿Quieres ofrecer tus servicios aquí?</h3>
+              <p>Tu perfil se mostrará con la descripción que ya tienes. ¡Postúlate con un solo clic!</p>
+              <button className="btn-postularme-aqui" onClick={handleGuardarPostulacion}>
+                Postularme a este Servicio
+              </button>
             </div>
           )}
-          
+
+          <hr className="seccion-divider" />
+
+          <h3>Perfiles Postulados</h3>
+          <div className="grid-mis-postulaciones">
+            {listaPostulaciones.length > 0 ? (
+              listaPostulaciones.map((postulacion) => {
+                const esMiPostulacion = currentUserInfo && postulacion.prestador.cedula === currentUserInfo.cedula;
+                return (
+                  <div key={postulacion.id_postulacion} className={`mini-perfil-postulacion ${esMiPostulacion ? 'mi-postulacion' : ''}`}>
+                    <div className="perfil-header">
+                      <img src={postulacion.prestador.foto || defaultPerfilIcon} alt="Perfil" className="perfil-icono-pequeno"/>
+                      <div className="perfil-info">
+                        <h5>{`${postulacion.prestador.nombres} ${postulacion.prestador.apellidos}`}</h5>
+                        {esMiPostulacion && <span>(Esta es tu postulación)</span>}
+                      </div>
+                    </div>
+                    <p className="perfil-descripcion">{postulacion.descripcion}</p>
+
+                    {/* --- BOTÓN AÑADIDO --- */}
+                    <button
+                        className="btn-ver-portafolio"
+                        onClick={() => handleVerPortafolio(postulacion.prestador.cedula)}
+                    >
+                      Ver Portafolio
+                    </button>
+
+                    {esMiPostulacion && miPostulacion ? (
+                       <button className="btn-anular" onClick={() => handleAnularPostulacion(miPostulacion.id_postulacion)}>
+                         Anular mi Postulación
+                       </button>
+                    ) : (
+                      <a href={`https://wa.me/${postulacion.whatsapp}`} target="_blank" rel="noopener noreferrer" className="whatsapp-link">
+                         Contactar por WhatsApp
+                      </a>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <p>Nadie se ha postulado a este servicio todavía. {rol === 'prestador' && '¡Sé el primero!'}</p>
+            )}
+          </div>
         </section>
       </main>
     </div>

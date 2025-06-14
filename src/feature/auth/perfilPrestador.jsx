@@ -353,7 +353,7 @@ const PerfilPrestador = () => {
                                 Editar
                             </button>
                         )}
-                        <button type="button" className="perfil-button btn-volver" onClick={() => navigate("/homePrestador")}>
+                        <button type="button" className="perfil-button btn-volver2" onClick={() => navigate("/homePrestador")}>
                             Volver al inicio
                         </button>
                     </div>

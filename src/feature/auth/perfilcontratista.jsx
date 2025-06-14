@@ -330,7 +330,7 @@ const PerfilContratista = () => {
                                 Editar
                             </button>
                         )}
-                        <button type="button" className="perfil-button btn-volver" onClick={() => navigate("/homeContratista")}>
+                        <button type="button" className="perfil-button btn-volver2" onClick={() => navigate("/homeContratista")}>
                             Volver al inicio
                         </button>
                     </div>

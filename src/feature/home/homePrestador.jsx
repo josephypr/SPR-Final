@@ -1,77 +1,111 @@
-import React, { useState, useEffect } from "react"; // Agregamos useEffect para la carga de datos
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/homePrestador.css";
 import logo from "../../assets/logo.png";
-import defaultPerfilIcon from "../../assets/perfil.png"; // Usamos defaultPerfilIcon para mayor claridad
+import defaultPerfilIcon from "../../assets/perfil.png";
+
 import hardware from "../../assets/hardware.jpg";
 import software from "../../assets/software.jpg";
 
-const servicios = [
-  { img: hardware, nombre: "Mantenimiento de hardware de pc" },
-  { img: software, nombre: "Mantenimiento de software de pc" },
-];
+// El mapa que asocia cada ID de la base de datos con una imagen local.
+const imageMap = {
+  1: software, // El servicio con ID 1 es Software
+  2: hardware, // El servicio con ID 2 es Hardware
+};
 
-const HomePrestador = () => { // Renombrado a HomePrestador para ser consistente
+const HomePrestador = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [prestadorInfo, setPrestadorInfo] = useState(null); // Nuevo estado para la información del prestador
+  const [prestadorInfo, setPrestadorInfo] = useState(null);
+  const [servicios, setServicios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Obtener credenciales del usuario
   const cedula = localStorage.getItem("cedula");
   const token = localStorage.getItem("token");
-  const prestadorEndpoint = `/api/prestador/${cedula}`; // Asegúrate de que esta sea la ruta correcta de tu API
 
-  // Cargar datos del prestador
   useEffect(() => {
-    const fetchPrestadorInfo = async () => {
-      if (!cedula || !token) {
-        console.error("Credenciales no encontradas, redirigiendo a login.");
-        navigate("/login"); // Asegúrate de que esta sea la ruta de tu login
-        return;
-      }
+    if (!cedula || !token) {
+      navigate("/login");
+      return;
+    }
 
+    const loadData = async () => {
       try {
-        const res = await fetch(prestadorEndpoint, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        setLoading(true);
+        setError(null);
 
-        if (!res.ok) {
-          if (res.status === 401) {
-            alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
-            localStorage.clear();
-            navigate("/login");
-          } else {
-            const errorData = await res.json();
-            throw new Error(errorData.mensaje || "Error al obtener información del prestador.");
-          }
+        const [prestadorRes, serviciosRes] = await Promise.all([
+          fetch(`/api/prestador/${cedula}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch('/api/categorias', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        if (!prestadorRes.ok || !serviciosRes.ok) {
+          throw new Error("Hubo un problema al cargar los datos iniciales.");
         }
 
-        const data = await res.json();
-        setPrestadorInfo(data);
+        const prestadorData = await prestadorRes.json();
+        const serviciosData = await serviciosRes.json();
+
+        setPrestadorInfo(prestadorData);
+        setServicios(serviciosData);
+
       } catch (err) {
-        console.error("Error al cargar la información del prestador:", err);
-        // Puedes mostrar un mensaje al usuario si la carga falla
-        // alert("Hubo un error al cargar tu información de perfil.");
+        setError(err.message);
+        console.error("Error en la carga de datos:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchPrestadorInfo();
-  }, [cedula, token, prestadorEndpoint, navigate]); // Dependencias para el useEffect
+    loadData();
+  }, [cedula, token, navigate]);
 
   const handlePerfilClick = () => setShowMenu(!showMenu);
+
   const handleCerrarSesion = () => {
     localStorage.clear();
-    window.location.href = "/"; // Redirige a la página de inicio o login después de cerrar sesión
+    window.location.href = "/";
   };
-  const handleIrPerfil = () => navigate("/perfil"); // Esta ruta es para tu perfil general
+  
+  const handleIrPerfil = () => navigate("/perfilPrestador");
+
+  const handleNavigateToPostulacion = (servicioSeleccionado) => {
+    navigate('/homePrestadorperfiles', {
+      state: {
+        selectedCategoriaId: servicioSeleccionado.id_categoria,
+        selectedCategoriaName: servicioSeleccionado.nombre_servicio,
+      },
+    });
+  };
+
+  const uniqueCategories = [...new Set(servicios.map(s => s.nombre_categoria))];
+
+  if (loading) {
+    return <div className="loading-container">Cargando...</div>;
+  }
+
+  if (error) {
+    return <div className="error-container">Error: {error}</div>;
+  }
 
   return (
     <div className="home">
       <header className="header">
-        <img src={logo} alt="Logo" className="logo" onClick={() => navigate("/homePrestador")} style={{ cursor: "pointer" }} />
+        <img
+          src={logo}
+          alt="Logo"
+          className="logo"
+          onClick={() => navigate("/homePrestador")}
+          style={{ cursor: "pointer" }}
+        />
         <div className="usuario" onClick={handlePerfilClick}>
           <span className="nombre-usuario">
-            {prestadorInfo ? `${prestadorInfo.nombres} ${prestadorInfo.apellidos}` : "Cargando..."}
+            {prestadorInfo ? `${prestadorInfo.nombres} ${prestadorInfo.apellidos}` : ""}
           </span>
           <img
             src={prestadorInfo?.foto || defaultPerfilIcon}
@@ -92,8 +126,7 @@ const HomePrestador = () => { // Renombrado a HomePrestador para ser consistente
           <div className="sidebar-category-section">
             <h3>Categoría</h3>
             <ul>
-              <li>Tecnología</li>
-              {/* Agrega más categorías si es necesario */}
+              {uniqueCategories.map(cat => <li key={cat}>{cat}</li>)}
             </ul>
           </div>
           <button
@@ -106,13 +139,22 @@ const HomePrestador = () => { // Renombrado a HomePrestador para ser consistente
 
         <section className="seccion-servicios">
           <div className="grid-servicios">
-            {servicios.map((s, index) => (
-              <div key={index} className="card-servicio">
-                <img src={s.img} alt={s.nombre} />
-                <h4 style={{ textAlign: 'center' }}>{s.nombre}</h4>
-                <button onClick={() => navigate('/homePrestadorperfiles')}>Prestadores</button>
-              </div>
-            ))}
+            {servicios.length > 0 ? (
+              servicios.map((servicio) => (
+                <div key={servicio.id_categoria} className="card-servicio">
+                  
+                  {/* === LÍNEA CORREGIDA === */}
+                  <img src={imageMap[servicio.id_categoria] || 'https://via.placeholder.com/300x200'} alt={servicio.nombre_servicio} />
+                  
+                  <h4 style={{ textAlign: 'center' }}>{servicio.nombre_servicio}</h4>
+                  <button onClick={() => handleNavigateToPostulacion(servicio)}>
+                    Prestadores
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>No hay servicios disponibles en este momento.</p>
+            )}
           </div>
         </section>
       </main>
@@ -120,4 +162,4 @@ const HomePrestador = () => { // Renombrado a HomePrestador para ser consistente
   );
 };
 
-export default HomePrestador; // Exporta con el nuevo nombre
+export default HomePrestador;

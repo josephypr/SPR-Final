@@ -142,8 +142,8 @@ input[type="file"] {
 }
 
 /* NUEVAS REGLAS PARA EL BOTÓN "VOLVER" */
-.btn-volver {
-    background-color: #7b2cbf; 
+.btn2-volver {
+    background-color: #5A0086; 
     color: white;
     border: none;
     padding: 10px 15px;

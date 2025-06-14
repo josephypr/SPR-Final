@@ -1,70 +1,90 @@
-import React, { useState, useEffect } from "react"; // Importamos useEffect
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/homePrestador.css"; // Asegúrate de que este sea el archivo CSS correcto para HomeContratista
+import "../../styles/homePrestador.css"; // Puedes seguir usando los mismos estilos
 import logo from "../../assets/logo.png";
-import defaultPerfilIcon from "../../assets/perfil.png"; // Usamos un nombre más claro para el ícono por defecto
+import defaultPerfilIcon from "../../assets/perfil.png";
+
+// Reutilizamos el mapa de imágenes y las importaciones
 import hardware from "../../assets/hardware.jpg";
 import software from "../../assets/software.jpg";
 
-const servicios = [
-  { img: hardware, nombre: "Mantenimiento de hardware de pc" },
-  { img: software, nombre: "Mantenimiento de software de pc" },
-];
+const imageMap = {
+  1: software,
+  2: hardware,
+};
 
-const HomeContratista = () => { // Cambiado el nombre de la constante a HomeContratista
+const HomeContratista = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [contratistaInfo, setContratistaInfo] = useState(null); // Estado para la información del CONTRATISTA
+  const [contratistaInfo, setContratistaInfo] = useState(null);
+  const [servicios, setServicios] = useState([]); // Estado para los servicios cargados de la API
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Obtener credenciales del usuario (asumiendo que es un contratista)
-  const cedula = localStorage.getItem("cedula"); // O el identificador que uses para el contratista
+  const cedula = localStorage.getItem("cedula");
   const token = localStorage.getItem("token");
-  // Asegúrate de que este endpoint sea el correcto para obtener la info del contratista
-  const contratistaEndpoint = `/api/contratista/${cedula}`; 
 
-  // Cargar datos del contratista al cargar el componente
   useEffect(() => {
-    const fetchContratistaInfo = async () => {
-      if (!cedula || !token) {
-        console.warn("Credenciales de contratista no encontradas en localStorage. El perfil no se cargará.");
-        // Opcional: Redirigir a login si las credenciales no están presentes
-        // navigate("/login"); 
-        return;
-      }
+    if (!cedula || !token) {
+      navigate("/login");
+      return;
+    }
 
+    const loadData = async () => {
       try {
-        const res = await fetch(contratistaEndpoint, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        setLoading(true);
+        setError(null);
 
-        if (!res.ok) {
-          if (res.status === 401) {
-            alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
-            localStorage.clear();
-            navigate("/login"); // Asegúrate de que esta sea la ruta de tu login
-          } else {
-            const errorData = await res.json();
-            throw new Error(errorData.mensaje || "Error al obtener información del contratista.");
-          }
-        }
+        // Hacemos las dos peticiones en paralelo para más eficiencia
+        const [contratistaRes, serviciosRes] = await Promise.all([
+          fetch(`/api/contratista/${cedula}`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch('/api/categorias', { headers: { Authorization: `Bearer ${token}` } })
+        ]);
 
-        const data = await res.json();
-        setContratistaInfo(data);
+        if (!contratistaRes.ok) throw new Error("No se pudo cargar la información de tu perfil.");
+        if (!serviciosRes.ok) throw new Error("No se pudieron cargar los servicios.");
+
+        const contratistaData = await contratistaRes.json();
+        const serviciosData = await serviciosRes.json();
+
+        setContratistaInfo(contratistaData);
+        setServicios(serviciosData);
+
       } catch (err) {
-        console.error("Error al cargar la información del contratista:", err);
-        // Puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
+        setError(err.message);
+        console.error("Error en la carga de datos:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchContratistaInfo();
-  }, [cedula, token, contratistaEndpoint, navigate]); // Dependencias del useEffect
+    loadData();
+  }, [cedula, token, navigate]);
+
+  const handleNavigateToPerfiles = (servicioSeleccionado) => {
+    // Navegamos a la página de perfiles, pasando los datos del servicio en el 'state'
+    navigate('/homePrestadorPerfiles', {
+      state: {
+        selectedCategoriaId: servicioSeleccionado.id_categoria,
+        selectedCategoriaName: servicioSeleccionado.nombre_servicio,
+      },
+    });
+  };
 
   const handlePerfilClick = () => setShowMenu(!showMenu);
   const handleCerrarSesion = () => {
     localStorage.clear();
-    window.location.href = "/"; // Redirige a la página de inicio o login
+    window.location.href = "/";
   };
-  const handleIrPerfil = () => navigate("/perfilContratista"); // Podría ser una ruta específica para el perfil del contratista
+  const handleIrPerfil = () => navigate("/perfilContratista");
+
+  if (loading) {
+    return <div className="loading-container">Cargando...</div>;
+  }
+
+  if (error) {
+    return <div className="error-container">Error: {error}</div>;
+  }
 
   return (
     <div className="home">
@@ -73,7 +93,7 @@ const HomeContratista = () => { // Cambiado el nombre de la constante a HomeCont
           src={logo}
           alt="Logo"
           className="logo"
-          onClick={() => navigate("/homeContratista")} // El logo te lleva a la página principal del contratista
+          onClick={() => navigate("/homeContratista")}
           style={{ cursor: "pointer" }}
         />
         <div className="usuario" onClick={handlePerfilClick}>
@@ -81,7 +101,7 @@ const HomeContratista = () => { // Cambiado el nombre de la constante a HomeCont
             {contratistaInfo ? `${contratistaInfo.nombres} ${contratistaInfo.apellidos}` : "Cargando..."}
           </span>
           <img
-            src={contratistaInfo?.foto || defaultPerfilIcon} // Usa la foto del contratista o la por defecto
+            src={contratistaInfo?.foto || defaultPerfilIcon}
             alt="Perfil"
             className="perfil-icono"
           />
@@ -97,21 +117,25 @@ const HomeContratista = () => { // Cambiado el nombre de la constante a HomeCont
       <main className="contenido">
         <aside className="sidebar">
           <div className="sidebar-category-section">
-            <h3>Categoría</h3>
+            <h3>Categorías</h3>
             <ul>
+              {/* Podríamos listar las categorías únicas aquí si quisiéramos */}
               <li>Tecnología</li>
-              {/* Agrega más categorías si es necesario */}
             </ul>
           </div>
         </aside>
 
         <section className="seccion-servicios">
+          <h2>Encuentra el Servicio que Necesitas</h2>
           <div className="grid-servicios">
-            {servicios.map((s, index) => (
-              <div key={index} className="card-servicio">
-                <img src={s.img} alt={s.nombre} />
-                <h4 style={{ textAlign: 'center' }}>{s.nombre}</h4>
-                <button onClick={() => navigate('/homeContratistaperfiles')}>Ver Prestadores</button>
+            {servicios.map((servicio) => (
+              <div key={servicio.id_categoria} className="card-servicio">
+                <img src={imageMap[servicio.id_categoria]} alt={servicio.nombre_servicio} />
+                <h4 style={{ textAlign: 'center' }}>{servicio.nombre_servicio}</h4>
+                {/* El botón ahora llama a la función correcta para navegar con datos */}
+                <button onClick={() => handleNavigateToPerfiles(servicio)}>
+                  Ver Prestadores
+                </button>
               </div>
             ))}
           </div>
@@ -121,4 +145,4 @@ const HomeContratista = () => { // Cambiado el nombre de la constante a HomeCont
   );
 };
 
-export default HomeContratista; // Exporta con el nuevo nombre
+export default HomeContratista;
