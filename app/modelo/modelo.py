@@ -61,6 +61,18 @@ class Categoria(db.Model):
     nombre_servicio = db.Column(db.String(250))
     mensajeria = db.relationship('Mensajes', backref='categorias_mesage')
 
+class PostulacionServicio(db.Model):
+    __tablename__ = 'postulacion_servicio'
+    id_postulacion = db.Column(db.Integer, primary_key=True)
+    descripcion = db.Column(db.String(500))
+    whatsapp = db.Column(db.String(20))
+    fecha_postulacion = db.Column(db.DateTime, server_default=db.func.now())
+    usuario_cedula = db.Column(db.Integer, db.ForeignKey('usuario.cedula'), nullable=False)
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id_categoria'), nullable=False)
+
+    prestador = db.relationship('Usuario', backref='postulaciones')
+    categoria = db.relationship('Categoria', backref='postulaciones')
+
 class Mensajes(db.Model):
     __tablename__ = 'mensajes'
     id_mensaje = db.Column(db.Integer, primary_key=True)
@@ -152,4 +164,10 @@ class CalificacionSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Calificacion
         include_relationships = True
+        load_instance = True
+
+class PostulacionServicioSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = PostulacionServicio
+        include_fk = True
         load_instance = True

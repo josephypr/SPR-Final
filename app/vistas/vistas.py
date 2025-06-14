@@ -1,6 +1,7 @@
 import datetime
+from app.modelo.modelo import PostulacionServicio
 from flask_restful import Resource
-from flask import request 
+from flask import request, jsonify
 from ..modelo import db, Usuario, UsuarioSchema, Mensajes, MensajesSchema, Categoria, CategoriasSchema, Rol, CalificacionSchema, Calificacion, Portafolio, PortafolioSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
 from cloudinary.uploader import upload
@@ -15,16 +16,34 @@ from werkzeug.utils import secure_filename
 import cloudinary.uploader
 
 
+def _extract_public_id(cloudinary_url):
+    """
+    Extrae el public_id de una URL de Cloudinary para poder borrar la imagen.
+    """
+    if not cloudinary_url or 'upload/' not in cloudinary_url:
+        return None
+    try:
+        # Encuentra la parte de la URL después de 'upload/'
+        upload_index = cloudinary_url.find('upload/')
+        # La siguiente parte puede tener una versión (ej. v123456/) o no
+        if 'v' in cloudinary_url[upload_index+7:] and cloudinary_url[upload_index+7].isdigit():
+            public_id_start_index = cloudinary_url.find('/', upload_index + 7) + 1
+        else:
+            public_id_start_index = upload_index + len('upload/')
+        
+        public_id_end_index = cloudinary_url.rfind('.')
+        return cloudinary_url[public_id_start_index:public_id_end_index]
+    except Exception as e:
+        print(f"Error extrayendo public_id: {e}")
+        return None
+
+
 class VistaContratista(Resource):
     @jwt_required()
     def get(self, cedula):
-        contratista = Usuario.query.get(cedula)
-        if contratista is None:
-            return {'mensaje': 'Contratista no encontrado'}, 404
-
+        contratista = Usuario.query.get_or_404(cedula)
         fecha_nacimiento_str = contratista.fecha_nacimiento.strftime('%Y-%m-%d') if contratista.fecha_nacimiento else None
-
-        contratista_data = {
+        return {
             "cedula": contratista.cedula,
             "nombres": contratista.nombres,
             "apellidos": contratista.apellidos,
@@ -33,105 +52,75 @@ class VistaContratista(Resource):
             "correo": contratista.correo,
             "fecha_nacimiento": fecha_nacimiento_str,
             "foto": contratista.foto
-        }
-        return contratista_data, 200
+        }, 200
 
     @jwt_required()
     def put(self, cedula):
-        contratista = Usuario.query.get(cedula)
-        if contratista is None:
-            return {'mensaje': 'Contratista no encontrado'}, 404
+        # --- MEJORA DE SEGURIDAD: Un usuario solo puede editar su propio perfil ---
+        current_user_cedula = get_jwt_identity()
+        if str(cedula) != current_user_cedula:
+            return {'mensaje': 'No autorizado para modificar este perfil'}, 403
 
+        contratista = Usuario.query.get_or_404(cedula)
         data = request.get_json()
 
         old_foto_url = contratista.foto
-        old_public_id = None
-        if old_foto_url:
-            try:
-                if 'upload/' in old_foto_url:
-                    upload_index = old_foto_url.find('upload/')
-                    if 'v' in old_foto_url[upload_index+7:] and old_foto_url[upload_index+7].isdigit():
-                        public_id_start_index = old_foto_url.find('/', upload_index + 7) + 1
-                    else:
-                        public_id_start_index = upload_index + len('upload/')
-                    
-                    public_id_end_index = old_foto_url.rfind('.')
-                    old_public_id = old_foto_url[public_id_start_index:public_id_end_index]
-            except Exception as e:
-                print(f"Error extrayendo public_id de la URL antigua para contratista: {e}")
-                old_public_id = None
-
-        if 'foto' in data and data['foto'] is not None:
-            contratista.foto = data['foto']
-
+        
+        # Actualizamos todos los campos de texto
         contratista.nombres = data.get("nombres", contratista.nombres)
         contratista.apellidos = data.get("apellidos", contratista.apellidos)
         contratista.correo = data.get("correo", contratista.correo)
         contratista.celular = data.get("celular", contratista.celular)
         contratista.direccion = data.get("direccion", contratista.direccion)
-        
-        if 'fecha_nacimiento' in data and data['fecha_nacimiento'] is not None:
-            try:
-                contratista.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
-            except ValueError:
-                return {"mensaje": "Formato de fecha de nacimiento inválido. Usa YYYY-MM-DD."}, 400
-        elif 'fecha_nacimiento' in data and data['fecha_nacimiento'] is None:
-            contratista.fecha_nacimiento = None
+        if data.get('fecha_nacimiento'):
+            contratista.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
 
-        try:
-            db.session.commit()
+        # --- LÓGICA PARA ACTUALIZAR LA FOTO ---
+        if 'foto' in data and data['foto'] != old_foto_url:
+            contratista.foto = data['foto']
+            # Si había una foto antigua, la borramos de Cloudinary
+            if old_foto_url:
+                old_public_id = _extract_public_id(old_foto_url)
+                if old_public_id:
+                    try:
+                        cloudinary.uploader.destroy(old_public_id)
+                        print(f"Imagen antigua {old_public_id} eliminada de Cloudinary.")
+                    except Exception as e:
+                        print(f"Error al eliminar imagen antigua de Cloudinary: {e}")
 
-            if 'foto' in data and data['foto'] and old_foto_url and data['foto'] != old_foto_url and old_public_id:
-                try:
-                    cloudinary.uploader.destroy(old_public_id)
-                    print(f"Imagen antigua {old_public_id} eliminada de Cloudinary (contratista).")
-                except Exception as cloudinary_err:
-                    print(f"Error al eliminar imagen antigua de Cloudinary (contratista): {cloudinary_err}")
-
-            return {"mensaje": "Perfil actualizado correctamente"}, 200
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error al actualizar perfil de contratista: {e}")
-            return {"mensaje": "Error interno del servidor al actualizar el perfil."}, 500
+        db.session.commit()
+        return {"mensaje": "Perfil actualizado correctamente"}, 200
 
     @jwt_required()
     def delete(self, cedula):
-        contratista = Usuario.query.get(cedula)
-        if contratista is None:
-            return {'mensaje': 'Contratista no encontrado.'}, 404
+        # --- MEJORA DE SEGURIDAD: Un usuario solo puede borrar su propio perfil ---
+        current_user_cedula = get_jwt_identity()
+        if str(cedula) != current_user_cedula:
+            return {'mensaje': 'No autorizado para eliminar este perfil'}, 403
+
+        contratista = Usuario.query.get_or_404(cedula)
         
+        # --- LÓGICA PARA BORRAR LA FOTO DE CLOUDINARY ---
         if contratista.foto:
-            try:
-                if 'upload/' in contratista.foto:
-                    upload_index = contratista.foto.find('upload/')
-                    if 'v' in contratista.foto[upload_index+7:] and contratista.foto[upload_index+7].isdigit():
-                        public_id_start_index = contratista.foto.find('/', upload_index + 7) + 1
-                    else:
-                        public_id_start_index = upload_index + len('upload/')
-                    public_id_end_index = contratista.foto.rfind('.')
-                    public_id_to_delete = contratista.foto[public_id_start_index:public_id_end_index]
-                
-                if public_id_to_delete:
+            public_id_to_delete = _extract_public_id(contratista.foto)
+            if public_id_to_delete:
+                try:
                     cloudinary.uploader.destroy(public_id_to_delete)
-                    print(f"Foto de contratista {public_id_to_delete} eliminada de Cloudinary al borrar el perfil.")
-            except Exception as e:
-                print(f"Error al eliminar foto de Cloudinary al borrar contratista: {e}")
+                    print(f"Foto de perfil {public_id_to_delete} eliminada de Cloudinary.")
+                except Exception as e:
+                    print(f"Error al eliminar foto de Cloudinary: {e}")
 
         db.session.delete(contratista)
         db.session.commit()
-        return {"mensaje": "Perfil contratista eliminado correctamente"}, 204
+        return {"mensaje": "Perfil de contratista eliminado correctamente"}, 200
 
 
 class VistaPrestador(Resource):
     @jwt_required()
     def get(self, cedula):
-        prestador = Usuario.query.get(cedula)
-        if prestador is None:
-            return {'mensaje': 'Prestador no encontrado'}, 404
-
+        prestador = Usuario.query.get_or_404(cedula)
         fecha_nacimiento_str = prestador.fecha_nacimiento.strftime('%Y-%m-%d') if prestador.fecha_nacimiento else None
-
-        prestador_data = {
+        return {
             "cedula": prestador.cedula,
             "nombres": prestador.nombres,
             "apellidos": prestador.apellidos,
@@ -142,96 +131,71 @@ class VistaPrestador(Resource):
             "correo": prestador.correo,
             "fecha_nacimiento": fecha_nacimiento_str,
             "foto": prestador.foto
-        }
-        return prestador_data, 200
+        }, 200
 
     @jwt_required()
     def put(self, cedula):
-        prestador = Usuario.query.get(cedula)
-        if prestador is None:
-            return {'mensaje': 'Prestador no encontrado'}, 404
+        # --- MEJORA DE SEGURIDAD: Un prestador solo puede editar su propio perfil ---
+        current_user_cedula = get_jwt_identity()
+        if str(cedula) != current_user_cedula:
+            return {'mensaje': 'No autorizado para modificar este perfil'}, 403
 
+        prestador = Usuario.query.get_or_404(cedula)
         data = request.get_json()
 
         old_foto_url = prestador.foto
-        old_public_id = None
-        if old_foto_url:
-            try:
-                if 'upload/' in old_foto_url:
-                    upload_index = old_foto_url.find('upload/')
-                    if 'v' in old_foto_url[upload_index+7:] and old_foto_url[upload_index+7].isdigit():
-                        public_id_start_index = old_foto_url.find('/', upload_index + 7) + 1
-                    else:
-                        public_id_start_index = upload_index + len('upload/')
-                    
-                    public_id_end_index = old_foto_url.rfind('.')
-                    old_public_id = old_foto_url[public_id_start_index:public_id_end_index]
-            except Exception as e:
-                print(f"Error extrayendo public_id de la URL antigua para prestador: {e}")
-                old_public_id = None
-
-        if 'foto' in data and data['foto'] is not None:
-            prestador.foto = data['foto']
-
+        
+        # Actualizamos todos los campos de texto
         prestador.nombres = data.get("nombres", prestador.nombres)
         prestador.apellidos = data.get("apellidos", prestador.apellidos)
         prestador.correo = data.get("correo", prestador.correo)
         prestador.celular = data.get("celular", prestador.celular)
         prestador.direccion = data.get("direccion", prestador.direccion)
+        if data.get('fecha_nacimiento'):
+            prestador.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
         
-        if 'fecha_nacimiento' in data and data['fecha_nacimiento'] is not None:
-            try:
-                prestador.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
-            except ValueError:
-                return {"mensaje": "Formato de fecha de nacimiento inválido. Usa YYYY-MM-DD."}, 400
-        elif 'fecha_nacimiento' in data and data['fecha_nacimiento'] is None:
-            prestador.fecha_nacimiento = None
-
+        # Campos específicos del prestador
         prestador.titulos_uni = data.get("titulos_uni", prestador.titulos_uni)
         prestador.descripcion = data.get("descripcion", prestador.descripcion)
 
-        try:
-            db.session.commit()
+        # --- LÓGICA PARA ACTUALIZAR LA FOTO ---
+        if 'foto' in data and data['foto'] != old_foto_url:
+            prestador.foto = data['foto']
+            # Si había una foto antigua, la borramos de Cloudinary
+            if old_foto_url:
+                old_public_id = _extract_public_id(old_foto_url)
+                if old_public_id:
+                    try:
+                        cloudinary.uploader.destroy(old_public_id)
+                        print(f"Imagen antigua {old_public_id} eliminada de Cloudinary.")
+                    except Exception as e:
+                        print(f"Error al eliminar imagen antigua de Cloudinary: {e}")
 
-            if 'foto' in data and data['foto'] and old_foto_url and data['foto'] != old_foto_url and old_public_id:
-                try:
-                    cloudinary.uploader.destroy(old_public_id)
-                    print(f"Imagen antigua {old_public_id} eliminada de Cloudinary (prestador).")
-                except Exception as cloudinary_err:
-                    print(f"Error al eliminar imagen antigua de Cloudinary (prestador): {cloudinary_err}")
-
-            return {"mensaje": "Perfil actualizado correctamente"}, 200
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error al actualizar perfil de prestador: {e}")
-            return {"mensaje": "Error interno del servidor al actualizar el perfil."}, 500
+        db.session.commit()
+        return {"mensaje": "Perfil actualizado correctamente"}, 200
 
     @jwt_required()
     def delete(self, cedula):
-        prestador = Usuario.query.get(cedula)
-        if prestador is None:
-            return {'mensaje': 'Prestador no encontrado.'}, 404
+        # --- MEJORA DE SEGURIDAD: Un prestador solo puede borrar su propio perfil ---
+        current_user_cedula = get_jwt_identity()
+        if str(cedula) != current_user_cedula:
+            return {'mensaje': 'No autorizado para eliminar este perfil'}, 403
 
+        prestador = Usuario.query.get_or_404(cedula)
+        
+        # --- LÓGICA PARA BORRAR LA FOTO DE CLOUDINARY ---
         if prestador.foto:
-            try:
-                if 'upload/' in prestador.foto:
-                    upload_index = prestador.foto.find('upload/')
-                    if 'v' in prestador.foto[upload_index+7:] and prestador.foto[upload_index+7].isdigit():
-                        public_id_start_index = prestador.foto.find('/', upload_index + 7) + 1
-                    else:
-                        public_id_start_index = upload_index + len('upload/')
-                    public_id_end_index = prestador.foto.rfind('.')
-                    public_id_to_delete = prestador.foto[public_id_start_index:public_id_end_index]
-                
-                if public_id_to_delete:
+            public_id_to_delete = _extract_public_id(prestador.foto)
+            if public_id_to_delete:
+                try:
                     cloudinary.uploader.destroy(public_id_to_delete)
-                    print(f"Foto de prestador {public_id_to_delete} eliminada de Cloudinary al borrar el perfil.")
-            except Exception as e:
-                print(f"Error al eliminar foto de Cloudinary al borrar prestador: {e}")
+                    print(f"Foto de perfil {public_id_to_delete} eliminada de Cloudinary.")
+                except Exception as e:
+                    print(f"Error al eliminar foto de Cloudinary: {e}")
 
         db.session.delete(prestador)
         db.session.commit()
-        return {"mensaje": "Perfil prestador eliminado correctamente"}, 204
+        return {"mensaje": "Perfil de prestador eliminado correctamente"}, 200
 
 
 class VistaSignIn(Resource):
@@ -320,6 +284,182 @@ class VistaLogin(Resource):
         }, 200
 
 
+
+
+class VistaPostulaciones(Resource):
+    @jwt_required()
+    def get(self):
+        """
+        Devuelve una lista de todas las postulaciones.
+        OPCIONAL: Si se pasa un 'categoria_id' como parámetro en la URL,
+        filtra las postulaciones para esa categoría específica.
+        Ejemplo de llamada desde el frontend: /postulaciones?categoria_id=1
+        """
+        try:
+            # Construimos la consulta base
+            query = PostulacionServicio.query
+
+            # Verificamos si nos pasaron un filtro en la URL
+            categoria_id_filtro = request.args.get('categoria_id', type=int)
+            if categoria_id_filtro:
+                query = query.filter_by(categoria_id=categoria_id_filtro)
+
+            # Ordenamos y ejecutamos la consulta final
+            postulaciones = query.order_by(PostulacionServicio.fecha_postulacion.desc()).all()
+            
+            if not postulaciones:
+                return {"mensaje": "No hay postulaciones para este servicio."}, 404
+
+            # El resto del código para formatear la respuesta se mantiene igual
+            resultado = []
+            for p in postulaciones:
+                resultado.append({
+                    "id_postulacion": p.id_postulacion,
+                    "descripcion": p.descripcion,
+                    "whatsapp": p.whatsapp,
+                    "fecha_postulacion": p.fecha_postulacion.strftime('%Y-%m-%d %H:%M:%S'),
+                    "prestador": { "cedula": p.prestador.cedula, "nombres": p.prestador.nombres, "apellidos": p.prestador.apellidos, "foto": p.prestador.foto },
+                    "categoria": { "id_categoria": p.categoria.id_categoria, "nombre_categoria": p.categoria.nombre_categoria, "nombre_servicio": p.categoria.nombre_servicio }
+                })
+            return jsonify(resultado)
+        except Exception as e:
+            return {"mensaje": f"Error interno del servidor: {str(e)}"}, 500
+
+    @jwt_required()
+    def post(self):
+        try:
+            cedula_usuario = get_jwt_identity()
+            usuario = Usuario.query.get(cedula_usuario)
+            if not usuario:
+                return {'mensaje': 'Usuario no encontrado'}, 404
+            if usuario.rol_id != 2: # Asumiendo que 2 es el id_rol de Prestador
+                return {'mensaje': 'Acción no permitida para este rol.'}, 403
+
+            data = request.get_json()
+            descripcion = data.get("descripcion")
+            categoria_id = data.get("categoria_id")
+            
+            if not descripcion or not categoria_id:
+                return {'mensaje': 'La descripción y el ID de la categoría son obligatorios'}, 400
+
+            nueva_postulacion = PostulacionServicio(
+                descripcion=descripcion, whatsapp=usuario.celular,
+                usuario_cedula=cedula_usuario, categoria_id=categoria_id
+            )
+            db.session.add(nueva_postulacion)
+            db.session.commit()
+            return {"mensaje": "Postulación guardada exitosamente", "id_postulacion": nueva_postulacion.id_postulacion}, 201
+        except Exception as e:
+            db.session.rollback()
+            return {"mensaje": f"Error al guardar postulación: {str(e)}"}, 500
+
+
+# DESPUÉS (Mejorado)
+class VistaPostulacionesPrestador(Resource):
+    @jwt_required()
+    def get(self):
+        """
+        Devuelve una lista con los detalles completos de todas las 
+        postulaciones del prestador logueado.
+        """
+        try:
+            cedula_prestador = get_jwt_identity()
+            postulaciones = PostulacionServicio.query.filter_by(usuario_cedula=cedula_prestador).order_by(PostulacionServicio.fecha_postulacion.desc()).all()
+            
+            # Ahora creamos una lista de diccionarios con toda la información necesaria
+            resultado = []
+            for p in postulaciones:
+                resultado.append({
+                    "id_postulacion": p.id_postulacion,
+                    "descripcion": p.descripcion, # La descripción específica de esa postulación
+                    "fecha_postulacion": p.fecha_postulacion.strftime('%Y-%m-%d'),
+                    "categoria": {
+                        "id_categoria": p.categoria.id_categoria,
+                        "nombre_servicio": p.categoria.nombre_servicio
+                    }
+                })
+            
+            return jsonify(resultado)
+
+        except Exception as e:
+            return {"mensaje": f"Error al obtener las postulaciones: {str(e)}"}, 500
+
+
+class VistaPostulacionDetalle(Resource):
+    @jwt_required()
+    def delete(self, id_postulacion):
+        
+        try:
+            # 1. Obtener la identidad del usuario que hace la petición desde el token
+            cedula_usuario = get_jwt_identity()
+            
+            # 2. Buscar la postulación por su ID. Si no la encuentra, devuelve un error 404.
+            postulacion = PostulacionServicio.query.get_or_404(id_postulacion)
+
+            # 3. VERIFICACIÓN DE SEGURIDAD CRÍTICA: ¿Es este usuario el dueño de la postulación?
+            if str(postulacion.usuario_cedula) != cedula_usuario:
+                # Si no es el dueño, se le niega el permiso.
+                return {'mensaje': 'No tiene permiso para eliminar esta postulación'}, 403
+
+            # 4. Si la verificación es exitosa, proceder a eliminar
+            db.session.delete(postulacion)
+            db.session.commit()
+            
+            return {'mensaje': 'Postulación eliminada correctamente'}, 200
+
+        except Exception as e:
+            db.session.rollback()
+            return {'mensaje': f'Error al eliminar la postulación: {str(e)}'}, 500
+        
+    @jwt_required()
+    def get(self, cedula=None):
+        """
+        Si se provee una cédula, devuelve el portafolio público de ese usuario.
+        Si no se provee una cédula, devuelve el portafolio del usuario logueado.
+        """
+        try:
+            target_cedula = None
+            if cedula:
+                # Si estamos viendo el portafolio de alguien más
+                target_cedula = cedula
+            else:
+                # Si estamos viendo nuestro propio portafolio
+                target_cedula = get_jwt_identity()
+
+            if not target_cedula:
+                return {'mensaje': 'No se especificó un usuario'}, 400
+
+            portafolios = Portafolio.query.filter_by(usuario_cedula=target_cedula).all()
+            
+            # Es importante devolver una lista vacía si no hay nada, no un 404
+            return portafolios_schema.dump(portafolios), 200
+        
+        except Exception as e:
+            return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
+
+
+
+class VistaCategorias(Resource):
+    @jwt_required()
+    def get(self):
+        try:
+            categorias = Categoria.query.all()
+            if not categorias:
+                return {"mensaje": "No hay categorías disponibles"}, 404
+            
+            lista_categorias = []
+            for cat in categorias:
+                lista_categorias.append({
+                    "id_categoria": cat.id_categoria,
+                    "nombre_categoria": cat.nombre_categoria,
+                    "nombre_servicio": cat.nombre_servicio,
+                })
+            return jsonify(lista_categorias)
+        except Exception as e:
+            db.session.rollback()
+            return {"mensaje": f"Error interno del servidor al cargar categorías: {str(e)}"}, 500
+
+
 class Vista_Mensajeria(Resource):
     def get(self):
         return mensajes_schema.dump(Mensajes.query.all()), 200
@@ -342,9 +482,33 @@ class Vista_Calificacion_Prestador(Resource):
         calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
         return calificaciones_schema.dump(calificaciones), 200
     
+# En tu archivo de vistas (vistas.py)
+
 class VistaPortafolio(Resource):
     @jwt_required()
+    def get(self, cedula=None):
+        """
+        Si se provee una cédula en la URL, devuelve el portafolio de ese usuario.
+        Si no, devuelve el portafolio del usuario que está logueado.
+        """
+        try:
+            target_cedula = cedula if cedula else get_jwt_identity()
+
+            if not target_cedula:
+                return {'mensaje': 'No se especificó un usuario'}, 400
+
+            portafolios = Portafolio.query.filter_by(usuario_cedula=target_cedula).all()
+            # Es crucial que aquí uses el schema con many=True
+            return portafolios_schema.dump(portafolios), 200 
+        
+        except Exception as e:
+            return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
+        
+    @jwt_required()
     def post(self):
+        """
+        Crea nuevos ítems en el portafolio del usuario logueado.
+        """
         try:
             cedula_usuario = get_jwt_identity()
             usuario = Usuario.query.get(cedula_usuario)
@@ -362,7 +526,6 @@ class VistaPortafolio(Resource):
                 if not descripcion or not imagen:
                     break
 
-                # Subir imagen a Cloudinary
                 resultado = cloudinary.uploader.upload(imagen)
                 url_imagen = resultado.get('secure_url')
 
@@ -375,6 +538,9 @@ class VistaPortafolio(Resource):
                 nuevos_portafolios.append(nuevo_portafolio)
                 index += 1
 
+            if not nuevos_portafolios:
+                return {'mensaje': 'No se enviaron servicios válidos para guardar.'}, 400
+
             db.session.commit()
             return portafolios_schema.dump(nuevos_portafolios), 201
 
@@ -382,14 +548,8 @@ class VistaPortafolio(Resource):
             db.session.rollback()
             return {'mensaje': f'Error al crear portafolios: {str(e)}'}, 500
 
-    @jwt_required()
-    def get(self):
-        try:
-            cedula_usuario = get_jwt_identity()
-            portafolios = Portafolio.query.filter_by(usuario_cedula=cedula_usuario).all()
-            return portafolios_schema.dump(portafolios), 200
-        except Exception as e:
-            return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
+    # El segundo método get() fue ELIMINADO.
+
 
 class VistaPortafolioDetalle(Resource):
     @jwt_required()

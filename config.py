@@ -14,6 +14,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = 'clave_secreta'
     PROPAGATE_EXCEPTIONS = True
+    DEBUG = True 
 
 cloudinary.config(
     cloud_name = 'dymxlvysw',
