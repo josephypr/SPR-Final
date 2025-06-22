@@ -221,38 +221,7 @@ const PerfilPrestador = () => {
                     </div>
                 )}
 
-                <div className="rating-section">
-                    <h3>Calificación</h3>
-                    {rating.totalResenas > 0 ? (
-                        <>
-                            <div className="rating-display">
-                                {renderStars(rating.promedio)}
-                                <span className="rating-value">
-                                    {parseFloat(rating.promedio).toFixed(1)} ({rating.totalResenas} reseñas)
-                                </span>
-                            </div>
-                            {rating.detalles.length > 0 && (
-                                <div className="rating-details">
-                                    <h4>Últimas reseñas</h4>
-                                    <ul className="reviews-list">
-                                        {rating.detalles.slice(0, 3).map((review, index) => (
-                                            <li key={index} className="review-item">
-                                                <div className="review-header">
-                                                    {renderStars(review.calificacion)}
-                                                </div>
-                                                {review.descripcion && (
-                                                    <p className="review-comment">{review.descripcion}</p>
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <p className="no-reviews">Aún no hay calificaciones</p>
-                    )}
-                </div>
+                
 
                 <div className="perfil-group">
                     <label>Nombres</label>
