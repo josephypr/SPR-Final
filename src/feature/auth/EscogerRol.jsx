@@ -9,7 +9,8 @@ const EscogerRol = () => {
   return (
     <div className="escoger-rol-container">
       <div className="escoger-rol-box">
-        <img src={logo} alt="Logo" className="logo-rol" />
+        <img src={logo} alt="Logo" className="logo-rol" onClick={() => navigate("/")}/>
+        
         <h2>Escoga un rol</h2>
         <div className="rol-buttons">
           <button onClick={() => navigate("/RegistroContratista")}>Contratista</button>

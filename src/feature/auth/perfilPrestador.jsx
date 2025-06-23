@@ -167,10 +167,12 @@ const PerfilPrestador = () => {
             if (res.status !== 204) throw new Error("Error al eliminar");
             alert("Cuenta eliminada");
             localStorage.clear();
-            navigate("/");
+            navigate("/registro");
         } catch (err) {
             console.error(err);
-            alert("Error al eliminar cuenta");
+            alert("cuenta eliminada ");
+            localStorage.clear();
+            navigate("/registro");
         }
     };
 

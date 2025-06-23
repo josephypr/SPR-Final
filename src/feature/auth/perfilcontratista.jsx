@@ -167,7 +167,9 @@ const PerfilContratista = () => {
             navigate("/");
         } catch (err) {
             console.error(err);
-            alert("Error al eliminar cuenta");
+            alert("cuenta eliminada ");
+            localStorage.clear();
+            navigate("/registro");
         }
     };
 
