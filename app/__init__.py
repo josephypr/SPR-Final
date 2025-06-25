@@ -7,11 +7,10 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flasgger import Swagger
-from flask_marshmallow import Marshmallow # AÑADIDO: Importar Marshmallow
+from flask_marshmallow import Marshmallow
 
-# AÑADIDO: Declarar db y ma globalmente aquí
 db = SQLAlchemy()
-ma = Marshmallow() # AÑADIDO: Declarar ma globalmente aquí
+ma = Marshmallow()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -19,17 +18,15 @@ def create_app(config_name):
     app.debug = True
     CORS(app)
 
-    # AÑADIDO: Inicializar db y ma con la instancia de la aplicación
     db.init_app(app)
-    ma.init_app(app) # AÑADIDO: Inicializar ma con la aplicación
+    ma.init_app(app)
 
-    Migrate(app,db)
+    Migrate(app,db) # Flask-Migrate se inicializa aquí
     jwt = JWTManager(app)
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=8) # CORREGIDO: Configurar la expiración del token en app.config
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=8) 
 
     api = Api(app)
 
-    # Configuración de Flasgger (Swagger UI)
     swagger_config = {
         "headers": [],
         "specs": [
@@ -57,16 +54,14 @@ def create_app(config_name):
     }
     Swagger(app, config=swagger_config)
 
-    # Importar tus modelos y vistas aquí, después de que db y ma se hayan inicializado con la app
-    # CORREGIDO: Quitar 'from .modelo import db' de las importaciones de arriba, ya que db se declara aquí.
-    # Ahora 'db' y 'ma' se importarán desde el nivel superior del paquete 'app' en tus modelos y vistas.
-    from .vistas import (
+    # Importar tus modelos y vistas (esto registra los modelos con SQLAlchemy)
+    from .vistas import ( # Asegúrate de que este import sea correcto
         VistaContratista, Vista_Mensajeria, VistaLogin, VistaSignIn, VistaPrestador,
         Vista_Calificacion_Contratista, Vista_Calificacion_Prestador, VistaPortafolio,
         VistaPortafolioDetalle, VistaPostulacionDetalle, VistaCategorias,
         VistaPostulaciones, VistaPostulacionesPrestador
     )
-    from .modelo import ( # Importa tus modelos para que SQLAlchemy los registre
+    from .modelo import ( # Importar tus modelos para que SQLAlchemy los registre
         Usuario, Rol, Categoria, PostulacionServicio, Mensajes, Portafolio,
         Reserva, Historial, Calificacion, Estado_ser
     )
@@ -87,10 +82,8 @@ def create_app(config_name):
     api.add_resource(VistaPostulacionesPrestador, '/prestador/postulaciones')
     api.add_resource(VistaPortafolio, '/portafolio', '/portafolio/<int:cedula>')
     
-    # IMPORTANTE: Asegúrate de que db.create_all() se ejecuta en el contexto de la aplicación
-    # Puedes añadirlo aquí, o si ya lo tienes en run.py, asegúrate de que run.py use app.app_context()
-    # Si lo añades aquí, se ejecutará cada vez que se cree la app.
-    with app.app_context():
-        db.create_all()
+    # ELIMINAR ESTE BLOQUE: Ya no es necesario si usas flask db upgrade para crear las tablas
+    # with app.app_context():
+    #     db.create_all()
 
     return app
