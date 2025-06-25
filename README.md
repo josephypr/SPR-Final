@@ -25,12 +25,8 @@ CONSOLA BASH
     
 
 7.  **Migraciones de la base de datos:**
+    flask db upgrade
     
-    flask init
-    flask migrate
-    flask upgrade
-    
-
 8.  **Verificar caché:**
     (Asegúrate de limpiar cualquier caché si es necesario para probar los cambios).
 
