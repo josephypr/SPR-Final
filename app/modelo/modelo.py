@@ -1,9 +1,12 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+# ELIMINADO: from flask_sqlalchemy import SQLAlchemy
+# ELIMINADO: from flask_migrate import Migrate
 
-db = SQLAlchemy()
+# IMPORTAR: db (y ma, si lo necesitas para esquemas personalizados) desde el nivel superior del paquete 'app'
+# Esto asume que 'db' se inicializa en app/__init__.py y se expone allí.
+from app import db, ma # Asumiendo que 'ma' (Marshmallow) también se inicializa en app/__init__.py
+
 
 # Tabla intermedia: usuario - categoria
 usuario_categoria = db.Table('usuario_categoria',

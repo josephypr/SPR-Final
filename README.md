@@ -34,3 +34,7 @@ CONSOLA BASH
 
 Para correr la aplicación:
 flask run
+
+
+## Ver Documentacion
+/apidocs/

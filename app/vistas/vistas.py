@@ -7,14 +7,15 @@ from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_tok
 from cloudinary.uploader import upload
 from werkzeug.utils import secure_filename
 import cloudinary.uploader
+
+# Importar Flasgger para la documentación Swagger
+from flasgger import swag_from # Se usa en las rutas para cargar la documentación desde YAML
+
 portafolio_schema = PortafolioSchema()
 portafolios_schema = PortafolioSchema(many=True)
 usuario_schema = UsuarioSchema()
-mensajes_schema = MensajesSchema
-calificaciones_schema = CalificacionSchema
-from werkzeug.utils import secure_filename
-import cloudinary.uploader
-
+mensajes_schema = MensajesSchema() # Instanciar MensajesSchema
+calificaciones_schema = CalificacionSchema(many=True) # Instanciar CalificacionSchema y many=True para listar
 
 def _extract_public_id(cloudinary_url):
     """
@@ -40,6 +41,40 @@ def _extract_public_id(cloudinary_url):
 
 class VistaContratista(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Contratistas'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del contratista.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Datos del contratista.',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'cedula': {'type': 'string'},
+                        'nombres': {'type': 'string'},
+                        'apellidos': {'type': 'string'},
+                        'celular': {'type': 'string'},
+                        'direccion': {'type': 'string'},
+                        'correo': {'type': 'string'},
+                        'fecha_nacimiento': {'type': 'string', 'format': 'date'},
+                        'foto': {'type': 'string', 'format': 'url'}
+                    }
+                }
+            },
+            '404': {
+                'description': 'Contratista no encontrado.'
+            }
+        }
+    })
     def get(self, cedula):
         contratista = Usuario.query.get_or_404(cedula)
         fecha_nacimiento_str = contratista.fecha_nacimiento.strftime('%Y-%m-%d') if contratista.fecha_nacimiento else None
@@ -55,8 +90,54 @@ class VistaContratista(Resource):
         }, 200
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Contratistas'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del contratista a actualizar.'
+            },
+            {
+                'name': 'body',
+                'in': 'body',
+                'required': True,
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'nombres': {'type': 'string', 'description': 'Nombres del contratista.'},
+                        'apellidos': {'type': 'string', 'description': 'Apellidos del contratista.'},
+                        'correo': {'type': 'string', 'format': 'email', 'description': 'Correo electrónico del contratista.'},
+                        'celular': {'type': 'string', 'description': 'Número de celular del contratista.'},
+                        'direccion': {'type': 'string', 'description': 'Dirección de residencia del contratista.'},
+                        'fecha_nacimiento': {'type': 'string', 'format': 'date', 'description': 'Fecha de nacimiento (YYYY-MM-DD).'},
+                        'foto': {'type': 'string', 'format': 'url', 'description': 'URL de la foto de perfil del contratista.'}
+                    }
+                },
+                'examples': {
+                    'aplicar_cambios': {
+                        'nombres': 'Nuevo Nombre',
+                        'celular': '3001234567'
+                    }
+                }
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Perfil actualizado correctamente.'
+            },
+            '403': {
+                'description': 'No autorizado para modificar este perfil.'
+            },
+            '404': {
+                'description': 'Contratista no encontrado.'
+            }
+        }
+    })
     def put(self, cedula):
-        # --- MEJORA DE SEGURIDAD: Un usuario solo puede editar su propio perfil ---
         current_user_cedula = get_jwt_identity()
         if str(cedula) != current_user_cedula:
             return {'mensaje': 'No autorizado para modificar este perfil'}, 403
@@ -66,7 +147,6 @@ class VistaContratista(Resource):
 
         old_foto_url = contratista.foto
         
-        # Actualizamos todos los campos de texto
         contratista.nombres = data.get("nombres", contratista.nombres)
         contratista.apellidos = data.get("apellidos", contratista.apellidos)
         contratista.correo = data.get("correo", contratista.correo)
@@ -75,10 +155,8 @@ class VistaContratista(Resource):
         if data.get('fecha_nacimiento'):
             contratista.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
 
-        # --- LÓGICA PARA ACTUALIZAR LA FOTO ---
         if 'foto' in data and data['foto'] != old_foto_url:
             contratista.foto = data['foto']
-            # Si había una foto antigua, la borramos de Cloudinary
             if old_foto_url:
                 old_public_id = _extract_public_id(old_foto_url)
                 if old_public_id:
@@ -92,15 +170,37 @@ class VistaContratista(Resource):
         return {"mensaje": "Perfil actualizado correctamente"}, 200
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Contratistas'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del contratista a eliminar.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Perfil de contratista eliminado correctamente.'
+            },
+            '403': {
+                'description': 'No autorizado para eliminar este perfil.'
+            },
+            '404': {
+                'description': 'Contratista no encontrado.'
+            }
+        }
+    })
     def delete(self, cedula):
-        # --- MEJORA DE SEGURIDAD: Un usuario solo puede borrar su propio perfil ---
         current_user_cedula = get_jwt_identity()
         if str(cedula) != current_user_cedula:
             return {'mensaje': 'No autorizado para eliminar este perfil'}, 403
 
         contratista = Usuario.query.get_or_404(cedula)
         
-        # --- LÓGICA PARA BORRAR LA FOTO DE CLOUDINARY ---
         if contratista.foto:
             public_id_to_delete = _extract_public_id(contratista.foto)
             if public_id_to_delete:
@@ -117,6 +217,42 @@ class VistaContratista(Resource):
 
 class VistaPrestador(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Prestadores'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del prestador.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Datos del prestador.',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'cedula': {'type': 'string'},
+                        'nombres': {'type': 'string'},
+                        'apellidos': {'type': 'string'},
+                        'celular': {'type': 'string'},
+                        'direccion': {'type': 'string'},
+                        'titulos_uni': {'type': 'string'},
+                        'descripcion': {'type': 'string'},
+                        'correo': {'type': 'string'},
+                        'fecha_nacimiento': {'type': 'string', 'format': 'date'},
+                        'foto': {'type': 'string', 'format': 'url'}
+                    }
+                }
+            },
+            '404': {
+                'description': 'Prestador no encontrado.'
+            }
+        }
+    })
     def get(self, cedula):
         prestador = Usuario.query.get_or_404(cedula)
         fecha_nacimiento_str = prestador.fecha_nacimiento.strftime('%Y-%m-%d') if prestador.fecha_nacimiento else None
@@ -134,8 +270,56 @@ class VistaPrestador(Resource):
         }, 200
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Prestadores'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del prestador a actualizar.'
+            },
+            {
+                'name': 'body',
+                'in': 'body',
+                'required': True,
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'nombres': {'type': 'string', 'description': 'Nombres del prestador.'},
+                        'apellidos': {'type': 'string', 'description': 'Apellidos del prestador.'},
+                        'correo': {'type': 'string', 'format': 'email', 'description': 'Correo electrónico del prestador.'},
+                        'celular': {'type': 'string', 'description': 'Número de celular del prestador.'},
+                        'direccion': {'type': 'string', 'description': 'Dirección de residencia del prestador.'},
+                        'fecha_nacimiento': {'type': 'string', 'format': 'date', 'description': 'Fecha de nacimiento (YYYY-MM-DD).'},
+                        'titulos_uni': {'type': 'string', 'description': 'Títulos universitarios del prestador.'},
+                        'descripcion': {'type': 'string', 'description': 'Descripción profesional del prestador.'},
+                        'foto': {'type': 'string', 'format': 'url', 'description': 'URL de la foto de perfil del prestador.'}
+                    }
+                },
+                'examples': {
+                    'aplicar_cambios': {
+                        'descripcion': 'Experto en desarrollo web con 5 años de experiencia.',
+                        'titulos_uni': 'Ingeniero de Sistemas'
+                    }
+                }
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Perfil actualizado correctamente.'
+            },
+            '403': {
+                'description': 'No autorizado para modificar este perfil.'
+            },
+            '404': {
+                'description': 'Prestador no encontrado.'
+            }
+        }
+    })
     def put(self, cedula):
-        # --- MEJORA DE SEGURIDAD: Un prestador solo puede editar su propio perfil ---
         current_user_cedula = get_jwt_identity()
         if str(cedula) != current_user_cedula:
             return {'mensaje': 'No autorizado para modificar este perfil'}, 403
@@ -145,7 +329,6 @@ class VistaPrestador(Resource):
 
         old_foto_url = prestador.foto
         
-        # Actualizamos todos los campos de texto
         prestador.nombres = data.get("nombres", prestador.nombres)
         prestador.apellidos = data.get("apellidos", prestador.apellidos)
         prestador.correo = data.get("correo", prestador.correo)
@@ -154,14 +337,11 @@ class VistaPrestador(Resource):
         if data.get('fecha_nacimiento'):
             prestador.fecha_nacimiento = datetime.datetime.strptime(data['fecha_nacimiento'], '%Y-%m-%d').date()
         
-        # Campos específicos del prestador
         prestador.titulos_uni = data.get("titulos_uni", prestador.titulos_uni)
         prestador.descripcion = data.get("descripcion", prestador.descripcion)
 
-        # --- LÓGICA PARA ACTUALIZAR LA FOTO ---
         if 'foto' in data and data['foto'] != old_foto_url:
             prestador.foto = data['foto']
-            # Si había una foto antigua, la borramos de Cloudinary
             if old_foto_url:
                 old_public_id = _extract_public_id(old_foto_url)
                 if old_public_id:
@@ -175,15 +355,37 @@ class VistaPrestador(Resource):
         return {"mensaje": "Perfil actualizado correctamente"}, 200
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Prestadores'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del prestador a eliminar.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Perfil de prestador eliminado correctamente.'
+            },
+            '403': {
+                'description': 'No autorizado para eliminar este perfil.'
+            },
+            '404': {
+                'description': 'Prestador no encontrado.'
+            }
+        }
+    })
     def delete(self, cedula):
-        # --- MEJORA DE SEGURIDAD: Un prestador solo puede borrar su propio perfil ---
         current_user_cedula = get_jwt_identity()
         if str(cedula) != current_user_cedula:
             return {'mensaje': 'No autorizado para eliminar este perfil'}, 403
 
         prestador = Usuario.query.get_or_404(cedula)
         
-        # --- LÓGICA PARA BORRAR LA FOTO DE CLOUDINARY ---
         if prestador.foto:
             public_id_to_delete = _extract_public_id(prestador.foto)
             if public_id_to_delete:
@@ -199,6 +401,117 @@ class VistaPrestador(Resource):
 
 
 class VistaSignIn(Resource):
+    @swag_from({
+        'tags': ['Autenticación'],
+        'description': 'Registra un nuevo usuario (contratista o prestador).',
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del usuario.'
+            },
+            {
+                'name': 'nombres',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Nombres del usuario.'
+            },
+            {
+                'name': 'apellidos',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Apellidos del usuario.'
+            },
+            {
+                'name': 'celular',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Número de celular del usuario.'
+            },
+            {
+                'name': 'direccion',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Dirección de residencia del usuario.'
+            },
+            {
+                'name': 'contrasena',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Contraseña del usuario.'
+            },
+            {
+                'name': 'correo',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Correo electrónico del usuario.'
+            },
+            {
+                'name': 'fecha_nacimiento',
+                'in': 'formData',
+                'type': 'string',
+                'format': 'date',
+                'required': True,
+                'description': 'Fecha de nacimiento (YYYY-MM-DD).'
+            },
+            {
+                'name': 'id_rol',
+                'in': 'formData',
+                'type': 'integer',
+                'required': True,
+                'description': 'ID del rol del usuario (ej. 1 para contratista, 2 para prestador).'
+            },
+            {
+                'name': 'titulos_uni',
+                'in': 'formData',
+                'type': 'string',
+                'required': False,
+                'description': 'Títulos universitarios del usuario (solo para prestadores).'
+            },
+            {
+                'name': 'descripcion',
+                'in': 'formData',
+                'type': 'string',
+                'required': False,
+                'description': 'Descripción profesional del usuario (solo para prestadores).'
+            },
+            {
+                'name': 'foto',
+                'in': 'formData',
+                'type': 'file',
+                'required': False,
+                'description': 'Foto de perfil del usuario.'
+            },
+            {
+                'name': 'categoria',
+                'in': 'formData',
+                'type': 'array',
+                'items': {'type': 'string'},
+                'collectionFormat': 'multi',
+                'required': False,
+                'description': 'Lista de categorías/servicios a asociar (ej. categoria=Hogar:Electricidad, categoria=Hogar:Fontanería). Solo para prestadores.'
+            }
+        ],
+        'responses': {
+            '201': {
+                'description': 'Usuario registrado exitosamente.'
+            },
+            '400': {
+                'description': 'Datos incompletos o formato de categoría inválido.'
+            },
+            '404': {
+                'description': 'Rol o categoría/servicio no encontrado.'
+            }
+        }
+    })
     def post(self):
         archivo = request.files.get('foto')
         url_imagen = None
@@ -254,6 +567,55 @@ class VistaSignIn(Resource):
 
 
 class VistaLogin(Resource):
+    @swag_from({
+        'tags': ['Autenticación'],
+        'description': 'Inicia sesión de un usuario y devuelve un token JWT.',
+        'parameters': [
+            {
+                'name': 'body',
+                'in': 'body',
+                'required': True,
+                'schema': {
+                    'type': 'object',
+                    'required': ['correo', 'contrasena', 'rol'],
+                    'properties': {
+                        'correo': {'type': 'string', 'format': 'email', 'description': 'Correo electrónico del usuario.'},
+                        'contrasena': {'type': 'string', 'description': 'Contraseña del usuario.'},
+                        'rol': {'type': 'integer', 'description': 'ID del rol del usuario (ej. 1 para contratista, 2 para prestador).'}
+                    }
+                },
+                'examples': {
+                    'credenciales': {
+                        'correo': 'usuario@example.com',
+                        'contrasena': 'micontrasena',
+                        'rol': 1
+                    }
+                }
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Inicio de sesión exitoso.',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'mensaje': {'type': 'string'},
+                        'token_de_acceso': {'type': 'string'},
+                        'rol': {'type': 'integer'}
+                    }
+                }
+            },
+            '400': {
+                'description': 'Correo, contraseña o rol no enviados.'
+            },
+            '401': {
+                'description': 'Correo no registrado o contraseña incorrecta.'
+            },
+            '403': {
+                'description': 'Rol incorrecto.'
+            }
+        }
+    })
     def post(self):
         datos = request.get_json()
         u_correo = datos.get("correo")
@@ -284,10 +646,61 @@ class VistaLogin(Resource):
         }, 200
 
 
-
-
 class VistaPostulaciones(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Postulaciones'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'categoria_id',
+                'in': 'query',
+                'type': 'integer',
+                'required': False,
+                'description': 'ID de la categoría para filtrar las postulaciones.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Lista de postulaciones (posiblemente filtradas por categoría).',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_postulacion': {'type': 'integer'},
+                            'descripcion': {'type': 'string'},
+                            'whatsapp': {'type': 'string'},
+                            'fecha_postulacion': {'type': 'string', 'format': 'date-time'},
+                            'prestador': {
+                                'type': 'object',
+                                'properties': {
+                                    'cedula': {'type': 'string'},
+                                    'nombres': {'type': 'string'},
+                                    'apellidos': {'type': 'string'},
+                                    'foto': {'type': 'string', 'format': 'url'}
+                                }
+                            },
+                            'categoria': {
+                                'type': 'object',
+                                'properties': {
+                                    'id_categoria': {'type': 'integer'},
+                                    'nombre_categoria': {'type': 'string'},
+                                    'nombre_servicio': {'type': 'string'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '404': {
+                'description': 'No hay postulaciones para este servicio.'
+            },
+            '500': {
+                'description': 'Error interno del servidor.'
+            }
+        }
+    })
     def get(self):
         """
         Devuelve una lista de todas las postulaciones.
@@ -296,21 +709,17 @@ class VistaPostulaciones(Resource):
         Ejemplo de llamada desde el frontend: /postulaciones?categoria_id=1
         """
         try:
-            # Construimos la consulta base
             query = PostulacionServicio.query
 
-            # Verificamos si nos pasaron un filtro en la URL
             categoria_id_filtro = request.args.get('categoria_id', type=int)
             if categoria_id_filtro:
                 query = query.filter_by(categoria_id=categoria_id_filtro)
 
-            # Ordenamos y ejecutamos la consulta final
             postulaciones = query.order_by(PostulacionServicio.fecha_postulacion.desc()).all()
             
             if not postulaciones:
                 return {"mensaje": "No hay postulaciones para este servicio."}, 404
 
-            # El resto del código para formatear la respuesta se mantiene igual
             resultado = []
             for p in postulaciones:
                 resultado.append({
@@ -326,6 +735,55 @@ class VistaPostulaciones(Resource):
             return {"mensaje": f"Error interno del servidor: {str(e)}"}, 500
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Postulaciones'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'body',
+                'in': 'body',
+                'required': True,
+                'schema': {
+                    'type': 'object',
+                    'required': ['descripcion', 'categoria_id'],
+                    'properties': {
+                        'descripcion': {'type': 'string', 'description': 'Descripción de la postulación del servicio.'},
+                        'categoria_id': {'type': 'integer', 'description': 'ID de la categoría del servicio postulado.'}
+                    }
+                },
+                'examples': {
+                    'nueva_postulacion': {
+                        'descripcion': 'Ofrezco servicios de fontanería para emergencias 24/7.',
+                        'categoria_id': 1
+                    }
+                }
+            }
+        ],
+        'responses': {
+            '201': {
+                'description': 'Postulación guardada exitosamente.',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'mensaje': {'type': 'string'},
+                        'id_postulacion': {'type': 'integer'}
+                    }
+                }
+            },
+            '400': {
+                'description': 'La descripción y el ID de la categoría son obligatorios.'
+            },
+            '403': {
+                'description': 'Acción no permitida para este rol (solo prestadores pueden postular).'
+            },
+            '404': {
+                'description': 'Usuario no encontrado.'
+            },
+            '500': {
+                'description': 'Error al guardar postulación.'
+            }
+        }
+    })
     def post(self):
         try:
             cedula_usuario = get_jwt_identity()
@@ -354,9 +812,39 @@ class VistaPostulaciones(Resource):
             return {"mensaje": f"Error al guardar postulación: {str(e)}"}, 500
 
 
-# DESPUÉS (Mejorado)
 class VistaPostulacionesPrestador(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Postulaciones'],
+        'security': [{'Bearer': []}],
+        'description': 'Devuelve una lista con los detalles completos de todas las postulaciones del prestador logueado.',
+        'responses': {
+            '200': {
+                'description': 'Lista de postulaciones del prestador logueado.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_postulacion': {'type': 'integer'},
+                            'descripcion': {'type': 'string'},
+                            'fecha_postulacion': {'type': 'string', 'format': 'date'},
+                            'categoria': {
+                                'type': 'object',
+                                'properties': {
+                                    'id_categoria': {'type': 'integer'},
+                                    'nombre_servicio': {'type': 'string'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '500': {
+                'description': 'Error al obtener las postulaciones.'
+            }
+        }
+    })
     def get(self):
         """
         Devuelve una lista con los detalles completos de todas las 
@@ -366,7 +854,6 @@ class VistaPostulacionesPrestador(Resource):
             cedula_prestador = get_jwt_identity()
             postulaciones = PostulacionServicio.query.filter_by(usuario_cedula=cedula_prestador).order_by(PostulacionServicio.fecha_postulacion.desc()).all()
             
-            # Ahora creamos una lista de diccionarios con toda la información necesaria
             resultado = []
             for p in postulaciones:
                 resultado.append({
@@ -387,21 +874,41 @@ class VistaPostulacionesPrestador(Resource):
 
 class VistaPostulacionDetalle(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Postulaciones'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'id_postulacion',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+                'description': 'ID de la postulación a eliminar.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Postulación eliminada correctamente.'
+            },
+            '403': {
+                'description': 'No tiene permiso para eliminar esta postulación.'
+            },
+            '404': {
+                'description': 'Postulación no encontrada.'
+            },
+            '500': {
+                'description': 'Error al eliminar la postulación.'
+            }
+        }
+    })
     def delete(self, id_postulacion):
-        
         try:
-            # 1. Obtener la identidad del usuario que hace la petición desde el token
             cedula_usuario = get_jwt_identity()
-            
-            # 2. Buscar la postulación por su ID. Si no la encuentra, devuelve un error 404.
             postulacion = PostulacionServicio.query.get_or_404(id_postulacion)
 
-            # 3. VERIFICACIÓN DE SEGURIDAD CRÍTICA: ¿Es este usuario el dueño de la postulación?
             if str(postulacion.usuario_cedula) != cedula_usuario:
-                # Si no es el dueño, se le niega el permiso.
                 return {'mensaje': 'No tiene permiso para eliminar esta postulación'}, 403
 
-            # 4. Si la verificación es exitosa, proceder a eliminar
             db.session.delete(postulacion)
             db.session.commit()
             
@@ -410,8 +917,46 @@ class VistaPostulacionDetalle(Resource):
         except Exception as e:
             db.session.rollback()
             return {'mensaje': f'Error al eliminar la postulación: {str(e)}'}, 500
-        
+    
+    # NOTA: Este método GET está duplicado de VistaPortafolio.get. 
+    # En una aplicación real, se debería resolver esta duplicidad.
     @jwt_required()
+    @swag_from({
+        'tags': ['Portafolios'], # Etiquetado como Portafolios porque su función real es esa
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': False, # Opcional si se obtiene del token
+                'description': 'Cédula del usuario para obtener su portafolio. Si no se provee, se usa la cédula del usuario logueado.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Lista de ítems del portafolio del usuario.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_portafolio': {'type': 'integer'},
+                            'descripcion': {'type': 'string'},
+                            'imagenes': {'type': 'string', 'format': 'url'},
+                            'usuario_cedula': {'type': 'string'}
+                        }
+                    }
+                }
+            },
+            '400': {
+                'description': 'No se especificó un usuario.'
+            },
+            '500': {
+                'description': 'Error al obtener portafolios.'
+            }
+        }
+    })
     def get(self, cedula=None):
         """
         Si se provee una cédula, devuelve el portafolio público de ese usuario.
@@ -420,10 +965,8 @@ class VistaPostulacionDetalle(Resource):
         try:
             target_cedula = None
             if cedula:
-                # Si estamos viendo el portafolio de alguien más
                 target_cedula = cedula
             else:
-                # Si estamos viendo nuestro propio portafolio
                 target_cedula = get_jwt_identity()
 
             if not target_cedula:
@@ -431,16 +974,41 @@ class VistaPostulacionDetalle(Resource):
 
             portafolios = Portafolio.query.filter_by(usuario_cedula=target_cedula).all()
             
-            # Es importante devolver una lista vacía si no hay nada, no un 404
             return portafolios_schema.dump(portafolios), 200
         
         except Exception as e:
             return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
 
 
-
 class VistaCategorias(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Categorías'],
+        'security': [{'Bearer': []}],
+        'description': 'Devuelve una lista de todas las categorías disponibles.',
+        'responses': {
+            '200': {
+                'description': 'Lista de categorías.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_categoria': {'type': 'integer'},
+                            'nombre_categoria': {'type': 'string'},
+                            'nombre_servicio': {'type': 'string'}
+                        }
+                    }
+                }
+            },
+            '404': {
+                'description': 'No hay categorías disponibles.'
+            },
+            '500': {
+                'description': 'Error interno del servidor al cargar categorías.'
+            }
+        }
+    })
     def get(self):
         try:
             categorias = Categoria.query.all()
@@ -461,23 +1029,142 @@ class VistaCategorias(Resource):
 
 
 class Vista_Mensajeria(Resource):
+    @swag_from({
+        'tags': ['Mensajes'],
+        'description': 'Devuelve una lista de todos los mensajes.',
+        'responses': {
+            '200': {
+                'description': 'Lista de mensajes.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object', # Ajustar al esquema real de Mensajes
+                        'properties': {
+                            'id': {'type': 'integer'},
+                            'mensajes': {'type': 'string'}
+                        }
+                    }
+                }
+            }
+        }
+    })
     def get(self):
-        return mensajes_schema.dump(Mensajes.query.all()), 200
+        # Asumiendo que mensajes_schema está configurado para serializar una lista de mensajes.
+        # Si MensajesSchema es para un solo mensaje, necesitarás otro esquema para la lista o usar dump(many=True).
+        # Aquí se asume que mensajes_schema ya puede manejar una lista debido a que el código original usa dump() directamente.
+        return mensajes_schema.dump(Mensajes.query.all(), many=True), 200 # Asegurar many=True
 
     @jwt_required()
+    @swag_from({
+        'tags': ['Mensajes'],
+        'security': [{'Bearer': []}],
+        'description': 'Crea un nuevo mensaje.',
+        'parameters': [
+            {
+                'name': 'body',
+                'in': 'body',
+                'required': True,
+                'schema': {
+                    'type': 'object',
+                    'required': ['mensajes'],
+                    'properties': {
+                        'mensajes': {'type': 'string', 'description': 'Contenido del mensaje.'}
+                    }
+                },
+                'examples': {
+                    'nuevo_mensaje': {
+                        'mensajes': 'Hola, necesito un servicio de plomería urgente.'
+                    }
+                }
+            }
+        ],
+        'responses': {
+            '201': {
+                'description': 'Mensaje creado exitosamente.',
+                'schema': {
+                    'type': 'object', # Ajustar al esquema real de Mensajes
+                    'properties': {
+                        'id': {'type': 'integer'},
+                        'mensajes': {'type': 'string'}
+                    }
+                }
+            }
+        }
+    })
     def post(self):
         nuevo_mensaje = Mensajes(mensajes=request.json['mensajes'])
         db.session.add(nuevo_mensaje)
+        db.session.commit()
         return mensajes_schema.dump(nuevo_mensaje), 201
     
 class Vista_Calificacion_Contratista(Resource):
     #ruta publica
+    @swag_from({
+        'tags': ['Calificaciones'],
+        'description': 'Obtiene las calificaciones para un contratista específico.',
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del contratista.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Lista de calificaciones del contratista.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object', # Ajustar al esquema real de Calificacion
+                        'properties': {
+                            'id_calificacion': {'type': 'integer'},
+                            'puntuacion': {'type': 'number'},
+                            'comentario': {'type': 'string'},
+                            'cedula': {'type': 'string'} # Cédula del contratista/prestador calificado
+                        }
+                    }
+                }
+            }
+        }
+    })
     def get(self, cedula):
         calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
         return calificaciones_schema.dump(calificaciones), 200
     
 class Vista_Calificacion_Prestador(Resource):
     #ruta publica
+    @swag_from({
+        'tags': ['Calificaciones'],
+        'description': 'Obtiene las calificaciones para un prestador específico.',
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': True,
+                'description': 'Cédula del prestador.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Lista de calificaciones del prestador.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object', # Ajustar al esquema real de Calificacion
+                        'properties': {
+                            'id_calificacion': {'type': 'integer'},
+                            'puntuacion': {'type': 'number'},
+                            'comentario': {'type': 'string'},
+                            'cedula': {'type': 'string'} # Cédula del contratista/prestador calificado
+                        }
+                    }
+                }
+            }
+        }
+    })
     def get(self, cedula):
         calificaciones = Calificacion.query.filter_by(cedula = cedula).all()
         return calificaciones_schema.dump(calificaciones), 200
@@ -486,6 +1173,42 @@ class Vista_Calificacion_Prestador(Resource):
 
 class VistaPortafolio(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Portafolios'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'cedula',
+                'in': 'path',
+                'type': 'string',
+                'required': False,
+                'description': 'Cédula del usuario para obtener su portafolio. Si no se provee, se usa la cédula del usuario logueado.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Lista de ítems del portafolio del usuario.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_portafolio': {'type': 'integer'},
+                            'descripcion': {'type': 'string'},
+                            'imagenes': {'type': 'string', 'format': 'url'},
+                            'usuario_cedula': {'type': 'string'}
+                        }
+                    }
+                }
+            },
+            '400': {
+                'description': 'No se especificó un usuario.'
+            },
+            '500': {
+                'description': 'Error al obtener portafolios.'
+            }
+        }
+    })
     def get(self, cedula=None):
         """
         Si se provee una cédula en la URL, devuelve el portafolio de ese usuario.
@@ -498,13 +1221,77 @@ class VistaPortafolio(Resource):
                 return {'mensaje': 'No se especificó un usuario'}, 400
 
             portafolios = Portafolio.query.filter_by(usuario_cedula=target_cedula).all()
-            # Es crucial que aquí uses el schema con many=True
             return portafolios_schema.dump(portafolios), 200 
         
         except Exception as e:
             return {'mensaje': f'Error al obtener portafolios: {str(e)}'}, 500
         
     @jwt_required()
+    @swag_from({
+        'tags': ['Portafolios'],
+        'security': [{'Bearer': []}],
+        'description': 'Crea nuevos ítems en el portafolio del usuario logueado. Admite múltiples ítems.',
+        'parameters': [
+            {
+                'name': 'servicios[0][descripcion]',
+                'in': 'formData',
+                'type': 'string',
+                'required': True,
+                'description': 'Descripción del primer ítem del portafolio.'
+            },
+            {
+                'name': 'servicios[0][imagen]',
+                'in': 'formData',
+                'type': 'file',
+                'required': True,
+                'description': 'Imagen para el primer ítem del portafolio.'
+            },
+            # Puedes añadir más parámetros con índices crecientes (servicios[1][descripcion], servicios[1][imagen], etc.)
+            # para documentar la capacidad de enviar múltiples ítems.
+            # Flasgger no soporta directamente esquemas complejos de array de objetos en formData sin un truco,
+            # así que se documenta cada campo individualmente.
+            {
+                'name': 'servicios[1][descripcion]',
+                'in': 'formData',
+                'type': 'string',
+                'required': False, # Opcional, para indicar que puedes añadir más
+                'description': 'Descripción del segundo ítem del portafolio (ejemplo para múltiples).'
+            },
+            {
+                'name': 'servicios[1][imagen]',
+                'in': 'formData',
+                'type': 'file',
+                'required': False, # Opcional
+                'description': 'Imagen para el segundo ítem del portafolio (ejemplo para múltiples).'
+            }
+        ],
+        'responses': {
+            '201': {
+                'description': 'Ítems del portafolio creados exitosamente.',
+                'schema': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'id_portafolio': {'type': 'integer'},
+                            'descripcion': {'type': 'string'},
+                            'imagenes': {'type': 'string', 'format': 'url'},
+                            'usuario_cedula': {'type': 'string'}
+                        }
+                    }
+                }
+            },
+            '400': {
+                'description': 'No se enviaron servicios válidos para guardar.'
+            },
+            '404': {
+                'description': 'Usuario no encontrado.'
+            },
+            '500': {
+                'description': 'Error al crear portafolios.'
+            }
+        }
+    })
     def post(self):
         """
         Crea nuevos ítems en el portafolio del usuario logueado.
@@ -548,11 +1335,33 @@ class VistaPortafolio(Resource):
             db.session.rollback()
             return {'mensaje': f'Error al crear portafolios: {str(e)}'}, 500
 
-    # El segundo método get() fue ELIMINADO.
-
 
 class VistaPortafolioDetalle(Resource):
     @jwt_required()
+    @swag_from({
+        'tags': ['Portafolios'],
+        'security': [{'Bearer': []}],
+        'parameters': [
+            {
+                'name': 'id_portafolio',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+                'description': 'ID del ítem del portafolio a eliminar.'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Ítem del portafolio eliminado correctamente.'
+            },
+            '404': {
+                'description': 'Portafolio no encontrado (o no pertenece al usuario logueado).'
+            },
+            '500': {
+                'description': 'Error al eliminar portafolio.'
+            }
+        }
+    })
     def delete(self, id_portafolio):
         try:
             cedula_usuario = get_jwt_identity()
@@ -564,6 +1373,16 @@ class VistaPortafolioDetalle(Resource):
             if not portafolio:
                 return {'mensaje': 'Portafolio no encontrado'}, 404
                 
+            # Borrar la imagen de Cloudinary antes de eliminar el registro de la base de datos
+            if portafolio.imagenes:
+                public_id_to_delete = _extract_public_id(portafolio.imagenes)
+                if public_id_to_delete:
+                    try:
+                        cloudinary.uploader.destroy(public_id_to_delete)
+                        print(f"Imagen de portafolio {public_id_to_delete} eliminada de Cloudinary.")
+                    except Exception as e:
+                        print(f"Error al eliminar imagen de Cloudinary: {e}")
+
             db.session.delete(portafolio)
             db.session.commit()
             return {'mensaje': 'Portafolio eliminado correctamente'}, 200
